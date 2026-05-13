@@ -11,7 +11,15 @@
             </flux:sidebar.header>
 
             <flux:sidebar.nav>
+                <flux:sidebar.item icon="arrow-left" :href="route('home')" wire:navigate>
+                    {{ __('Retour au site') }}
+                </flux:sidebar.item>
+
+                <flux:separator class="my-2" />
+
                 <flux:sidebar.group :heading="__('Platform')" class="grid">
+
+
                     <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </flux:sidebar.item>
@@ -65,6 +73,12 @@
                     <flux:menu.separator />
 
                     <flux:menu.radio.group>
+                        <flux:menu.item :href="route('home')" icon="arrow-left" wire:navigate>
+                            Retour au site
+                        </flux:menu.item>
+
+                        <flux:menu.separator />
+
                         <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>
                             {{ __('Settings') }}
                         </flux:menu.item>
