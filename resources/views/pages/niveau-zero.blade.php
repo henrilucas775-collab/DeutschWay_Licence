@@ -101,8 +101,7 @@
                                     <button type="button" class="btn btn-primary w-full mt-4 orbital-node__open-modal">Ouvrir le module</button>
                                 </div>
                             </div>
-                            
-                            <!-- Node 2 -->
+                                   <!-- Nœud 2 : Chiffres -->
                             <div class="orbital-node" data-id="2" data-related="1,3,5" data-energy="42">
                                 <span class="orbital-node__glow"></span>
                                 <button type="button" class="orbital-node__orb">
@@ -110,26 +109,132 @@
                                 </button>
                                 <span class="orbital-node__label font-mono">CHIFFRES</span>
                                 <div class="orbital-node__card glass neon-box" id="orbital-card-2">
-                                    <h3 class="orbital-node__card-title">Chiffres</h3>
-                                    <p class="orbital-node__card-text text-muted">Compter en allemand.</p>
+                                    <div class="orbital-node__card-pin"></div>
+                                    <div class="orbital-node__card-head">
+                                        <span class="orbital-badge orbital-badge--pending">À VENIR</span>
+                                        <span class="orbital-node__date font-mono">Étape 2</span>
+                                    </div>
+                                    <h3 class="orbital-node__card-title">Nombres &amp; quantités</h3>
+                                    <p class="orbital-node__card-text text-muted">Compter, les ordres de grandeur et l’usage du nombre dans la vie quotidienne.</p>
+                                    <div class="orbital-energy">
+                                        <div class="orbital-energy__row">
+                                            <span class="font-mono text-xs text-muted">Progression</span>
+                                            <span class="font-mono text-xs orbital-energy__val">42%</span>
+                                        </div>
+                                        <div class="orbital-energy__bar"><span class="orbital-energy__fill" style="width:42%"></span></div>
+                                    </div>
+                                    <div class="orbital-related">
+                                        <p class="orbital-related__title font-mono text-xs text-secondary uppercase tracking-wider mb-2">Modules liés</p>
+                                        <div class="orbital-related__btns">
+                                            <button type="button" class="btn orbital-jump-btn" data-orbit-jump="1">Alphabet →</button>
+                                            <button type="button" class="btn orbital-jump-btn" data-orbit-jump="3">Couleurs →</button>
+                                            <button type="button" class="btn orbital-jump-btn" data-orbit-jump="5">Quotidien →</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Node 3 -->
+                            <!-- Nœud 3 : Couleurs -->
                             <div class="orbital-node" data-id="3" data-related="2,4,5" data-energy="56">
                                 <span class="orbital-node__glow"></span>
                                 <button type="button" class="orbital-node__orb">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 11-6 6v3h9l3-3" /></svg>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 11-6 6v3h9l3-3" /><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4" /></svg>
                                 </button>
                                 <span class="orbital-node__label font-mono">COULEURS</span>
                                 <div class="orbital-node__card glass neon-box" id="orbital-card-3">
-                                    <h3 class="orbital-node__card-title">Couleurs</h3>
-                                    <p class="orbital-node__card-text text-muted">Les couleurs fondamentales.</p>
+                                    <div class="orbital-node__card-pin"></div>
+                                    <div class="orbital-node__card-head">
+                                        <span class="orbital-badge orbital-badge--pending">À VENIR</span>
+                                        <span class="orbital-node__date font-mono">Étape 3</span>
+                                    </div>
+                                    <h3 class="orbital-node__card-title">Couleurs &amp; description</h3>
+                                    <p class="orbital-node__card-text text-muted">Vocabulaire visuel et accords simples pour décrire ce qui vous entoure.</p>
+                                    <div class="orbital-energy">
+                                        <div class="orbital-energy__row">
+                                            <span class="font-mono text-xs text-muted">Progression</span>
+                                            <span class="font-mono text-xs orbital-energy__val">56%</span>
+                                        </div>
+                                        <div class="orbital-energy__bar"><span class="orbital-energy__fill" style="width:56%"></span></div>
+                                    </div>
+                                    <div class="orbital-related">
+                                        <p class="orbital-related__title font-mono text-xs text-secondary uppercase tracking-wider mb-2">Modules liés</p>
+                                        <div class="orbital-related__btns">
+                                            <button type="button" class="btn orbital-jump-btn" data-orbit-jump="2">Chiffres →</button>
+                                            <button type="button" class="btn orbital-jump-btn" data-orbit-jump="4">Politesse →</button>
+                                            <button type="button" class="btn orbital-jump-btn" data-orbit-jump="5">Quotidien →</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Nœud 4 : Politesse -->
+                            <div class="orbital-node" data-id="4" data-related="3,5" data-energy="30">
+                                <span class="orbital-node__glow"></span>
+                                <button type="button" class="orbital-node__orb">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>
+                                </button>
+                                <span class="orbital-node__label font-mono">POLITESSE</span>
+                                <div class="orbital-node__card glass neon-box" id="orbital-card-4">
+                                    <div class="orbital-node__card-pin"></div>
+                                    <div class="orbital-node__card-head">
+                                        <span class="orbital-badge orbital-badge--pending">À VENIR</span>
+                                        <span class="orbital-node__date font-mono">Étape 4</span>
+                                    </div>
+                                    <h3 class="orbital-node__card-title">Politesse &amp; interactions</h3>
+                                    <p class="orbital-node__card-text text-muted">Formules essentielles pour entrer en contact et respecter les codes du quotidien.</p>
+                                    <div class="orbital-energy">
+                                        <div class="orbital-energy__row">
+                                            <span class="font-mono text-xs text-muted">Progression</span>
+                                            <span class="font-mono text-xs orbital-energy__val">30%</span>
+                                        </div>
+                                        <div class="orbital-energy__bar"><span class="orbital-energy__fill" style="width:30%"></span></div>
+                                    </div>
+                                    <div class="orbital-related">
+                                        <p class="orbital-related__title font-mono text-xs text-secondary uppercase tracking-wider mb-2">Modules liés</p>
+                                        <div class="orbital-related__btns">
+                                            <button type="button" class="btn orbital-jump-btn" data-orbit-jump="3">Couleurs →</button>
+                                            <button type="button" class="btn orbital-jump-btn" data-orbit-jump="5">Quotidien →</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Nœud 5 : Vie quotidienne -->
+                            <div class="orbital-node" data-id="5" data-related="2,3,4" data-energy="48">
+                                <span class="orbital-node__glow"></span>
+                                <button type="button" class="orbital-node__orb">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
+                                </button>
+                                <span class="orbital-node__label font-mono orbital-node__label--long" title="Vie quotidienne">VIE QUOTIDIENNE</span>
+                                <div class="orbital-node__card glass neon-box" id="orbital-card-5">
+                                    <div class="orbital-node__card-pin"></div>
+                                    <div class="orbital-node__card-head">
+                                        <span class="orbital-badge orbital-badge--pending">À VENIR</span>
+                                        <span class="orbital-node__date font-mono">Étape 5</span>
+                                    </div>
+                                    <h3 class="orbital-node__card-title">Vie quotidienne</h3>
+                                    <p class="orbital-node__card-text text-muted">Courses, transports, logement et habitudes locales : le vocabulaire et les situations que vous croisez chaque jour en Allemagne.</p>
+                                    <div class="orbital-energy">
+                                        <div class="orbital-energy__row">
+                                            <span class="font-mono text-xs text-muted">Progression</span>
+                                            <span class="font-mono text-xs orbital-energy__val">48%</span>
+                                        </div>
+                                        <div class="orbital-energy__bar"><span class="orbital-energy__fill" style="width:48%"></span></div>
+                                    </div>
+                                    <div class="orbital-related">
+                                        <p class="orbital-related__title font-mono text-xs text-secondary uppercase tracking-wider mb-2">Modules liés</p>
+                                        <div class="orbital-related__btns">
+                                            <button type="button" class="btn orbital-jump-btn" data-orbit-jump="2">Chiffres →</button>
+                                            <button type="button" class="btn orbital-jump-btn" data-orbit-jump="3">Couleurs →</button>
+                                            <button type="button" class="btn orbital-jump-btn" data-orbit-jump="4">Politesse →</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
 
                 <aside class="destination-decor">
                     <article class="destination-decor__card">

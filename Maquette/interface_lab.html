@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LAB — Atelier Clair</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper: #F5F7FB;
+    --stone: #E8EDF2;
+    --clay: #D9DFE8;
+    --mauve: #C9D0DB;
+    --charcoal-light: #6A6E79;
+    --charcoal-mid: #5B5F69;
+    --charcoal-deep: #3A3E46;
+    --ink: #1E262F;
+    --accent: #8B9A8B;
+    --accent-soft: #A8B9A8;
+    --accent-dim: rgba(139,154,139,0.12);
+    --accent-glow: rgba(139,154,139,0.25);
+    --glass: rgba(233,240,245,0.7);
+    --glass-border: rgba(106,110,121,0.2);
+    --text-primary: #1E2A32;
+    --text-secondary: #5B6F7A;
+    --sidebar-w: 260px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    background: var(--paper);
+    color: var(--text-primary);
+    font-family: 'Syne', sans-serif;
+    overflow: hidden;
+  }
+
+  /* ── LIGHT NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999; opacity: 0.4;
+  }
+
+  /* ── SOFT AMBIENT BLOBS ── */
+  .blob {
+    position: fixed; border-radius: 50%; filter: blur(100px);
+    pointer-events: none; z-index: 0;
+  }
+  .blob-1 {
+    width: 550px; height: 550px;
+    background: radial-gradient(circle, rgba(139,154,139,0.08) 0%, transparent 70%);
+    top: -180px; left: var(--sidebar-w);
+    animation: drift1 22s ease-in-out infinite;
+  }
+  .blob-2 {
+    width: 450px; height: 450px;
+    background: radial-gradient(circle, rgba(201,208,219,0.3) 0%, transparent 70%);
+    bottom: -120px; right: 5%;
+    animation: drift2 26s ease-in-out infinite;
+  }
+  .blob-3 {
+    width: 380px; height: 380px;
+    background: radial-gradient(circle, rgba(217,223,232,0.4) 0%, transparent 70%);
+    top: 40%; left: -100px;
+    animation: drift3 19s ease-in-out infinite;
+  }
+  @keyframes drift1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(50px,30px)} }
+  @keyframes drift2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-35px,-45px)} }
+  @keyframes drift3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(40px,-25px)} }
+
+  /* ── LAYOUT ── */
+  .shell {
+    display: flex;
+    height: 100vh;
+    position: relative; z-index: 1;
+  }
+
+  /* ── SIDEBAR CLAIRE ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    flex-shrink: 0;
+    background: rgba(245,247,251,0.88);
+    border-right: 1px solid var(--glass-border);
+    backdrop-filter: blur(20px);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.02);
+  }
+
+  .sidebar::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.4;
+  }
+
+  .sidebar::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(106,110,121,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(106,110,121,0.03) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+  }
+
+  .sidebar-brand {
+    padding: 32px 24px 28px;
+    border-bottom: 1px solid var(--glass-border);
+    position: relative; z-index: 1;
+  }
+
+  .brand-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+
+  .brand-icon {
+    width: 34px; height: 34px;
+    border: 1.5px solid var(--accent);
+    border-radius: 10px;
+    display: grid; place-items: center;
+    position: relative;
+    overflow: hidden;
+    background: rgba(139,154,139,0.08);
+  }
+
+  .brand-icon::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--accent-dim);
+    animation: pulse-icon 2.8s ease-in-out infinite;
+  }
+
+  @keyframes pulse-icon {
+    0%,100%{opacity:0.3} 50%{opacity:0.7}
+  }
+
+  .brand-icon svg { position: relative; z-index:1; stroke: var(--accent); }
+
+  .brand-name {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--charcoal-mid);
+  }
+
+  .brand-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--charcoal-light);
+    letter-spacing: 0.08em;
+    margin-top: 3px;
+  }
+
+  /* NAV */
+  .nav-section {
+    padding: 24px 14px;
+    flex: 1;
+    position: relative; z-index: 1;
+  }
+
+  .nav-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--charcoal-light);
+    text-transform: uppercase;
+    padding: 0 12px;
+    margin-bottom: 12px;
+  }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.22s cubic-bezier(.4,0,.2,1);
+    margin-bottom: 4px;
+    border: 1px solid transparent;
+    text-decoration: none;
+    color: var(--charcoal-mid);
+  }
+
+  .nav-item:hover {
+    background: var(--glass);
+    border-color: var(--glass-border);
+    color: var(--ink);
+  }
+
+  .nav-item.active {
+    background: white;
+    border-color: var(--mauve);
+    color: var(--charcoal-deep);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02), 0 1px 2px rgba(0,0,0,0.03);
+  }
+
+  .nav-item.active::before {
+    content: '';
+    position: absolute; left: -14px; top: 50%;
+    transform: translateY(-50%);
+    width: 3px; height: 40%;
+    background: var(--accent);
+    border-radius: 0 4px 4px 0;
+  }
+
+  .nav-icon {
+    width: 18px; height: 18px;
+    opacity: 0.65;
+    flex-shrink: 0;
+    stroke-width: 1.5;
+  }
+
+  .nav-item.active .nav-icon,
+  .nav-item:hover .nav-icon { opacity: 1; stroke: var(--accent); }
+
+  .nav-text {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+
+  /* bottom user area */
+  .sidebar-footer {
+    padding: 18px 14px 24px;
+    border-top: 1px solid var(--glass-border);
+    position: relative; z-index: 1;
+  }
+
+  .user-chip {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: white;
+    border: 1px solid var(--glass-border);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .user-chip:hover { border-color: var(--mauve); background: var(--glass); }
+
+  .user-avatar {
+    width: 34px; height: 34px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--clay), var(--mauve));
+    display: grid; place-items: center;
+    font-size: 12px; font-weight: 600;
+    color: var(--charcoal-deep);
+    flex-shrink: 0;
+  }
+
+  .user-meta { flex: 1; min-width: 0; }
+  .user-name { font-size: 13px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .user-role { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--charcoal-light); letter-spacing: 0.05em; }
+
+  .status-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 4px var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* ── MAIN ── */
+  .main {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: rgba(245,247,251,0.5);
+  }
+
+  /* topbar claire */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 36px;
+    border-bottom: 1px solid var(--glass-border);
+    background: rgba(245,247,251,0.85);
+    backdrop-filter: blur(12px);
+    position: sticky; top: 0; z-index: 10;
+    flex-shrink: 0;
+  }
+
+  .topbar-left {
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .breadcrumb {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--charcoal-light);
+    letter-spacing: 0.04em;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .breadcrumb-current {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .topbar-actions {
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .btn-ghost {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 16px;
+    border: 1px solid var(--glass-border);
+    border-radius: 40px;
+    background: white;
+    color: var(--charcoal-mid);
+    font-family: 'Syne', sans-serif;
+    font-size: 12px; font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--accent);
+    background: var(--glass);
+    color: var(--ink);
+  }
+
+  /* ── CONTENT AREA ── */
+  .content {
+    flex: 1;
+    padding: 48px 56px 56px 56px;
+    position: relative;
+  }
+
+  /* WIP panel clair & élégant */
+  .wip-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 68vh;
+    position: relative;
+  }
+
+  /* decorative ring plus doux */
+  .ring-deco {
+    position: absolute;
+    width: 520px; height: 520px;
+    border-radius: 50%;
+    border: 1px solid rgba(106,110,121,0.12);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation: spin-slow 45s linear infinite;
+  }
+
+  .ring-deco::before {
+    content: '';
+    position: absolute;
+    width: 380px; height: 380px;
+    border-radius: 50%;
+    border: 1px dashed rgba(106,110,121,0.1);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .ring-deco::after {
+    content: '';
+    position: absolute; top: -5px; left: 50%;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+    transform: translateX(-50%);
+  }
+
+  @keyframes spin-slow { to { transform: translate(-50%,-50%) rotate(360deg); } }
+
+  .wip-card {
+    position: relative; z-index: 2;
+    text-align: center;
+    padding: 48px 56px;
+    background: rgba(255,255,255,0.85);
+    border: 1px solid var(--glass-border);
+    border-radius: 36px;
+    backdrop-filter: blur(20px);
+    max-width: 560px;
+    width: 100%;
+    animation: fadeUp 0.55s ease both;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.02), 0 2px 4px rgba(0,0,0,0.02);
+  }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(20px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  .wip-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 16px;
+    background: var(--accent-dim);
+    border: 1px solid rgba(139,154,139,0.25);
+    border-radius: 60px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 32px;
+  }
+
+  .wip-badge-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent);
+  }
+
+  .wip-title {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 18px;
+  }
+
+  .wip-title span {
+    display: block;
+    background: linear-gradient(135deg, var(--charcoal-mid), var(--charcoal-deep));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .wip-desc {
+    font-family: 'DM Mono', monospace;
+    font-size: 12.5px;
+    color: var(--charcoal-light);
+    line-height: 1.7;
+    margin-bottom: 40px;
+    letter-spacing: 0.02em;
+  }
+
+  .wip-progress {
+    background: var(--clay);
+    border-radius: 60px;
+    height: 4px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .wip-progress-bar {
+    height: 100%;
+    width: 42%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-soft));
+    border-radius: 60px;
+    position: relative;
+    animation: shimmer 2.8s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0%   { box-shadow: 0 0 0px var(--accent); opacity: 0.8; }
+    50%  { box-shadow: 0 0 10px var(--accent-glow); opacity: 1; }
+    100% { box-shadow: 0 0 0px var(--accent); opacity: 0.8; }
+  }
+
+  .wip-progress-label {
+    display: flex; justify-content: space-between;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--charcoal-light);
+    letter-spacing: 0.06em;
+  }
+
+  /* elegant corner detail */
+  .wip-card::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 40px; right: 40px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(139,154,139,0.3), transparent);
+  }
+
+  .section-chips {
+    display: flex; justify-content: center; gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 32px;
+  }
+
+  .chip {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 14px;
+    border: 1px solid var(--glass-border);
+    border-radius: 60px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9.5px;
+    color: var(--charcoal-mid);
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+    background: white;
+  }
+
+  .chip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* ── SCROLLBAR ── */
+  .main::-webkit-scrollbar { width: 5px; }
+  .main::-webkit-scrollbar-track { background: var(--stone); }
+  .main::-webkit-scrollbar-thumb { background: var(--clay); border-radius: 10px; }
+  .main::-webkit-scrollbar-thumb:hover { background: var(--mauve); }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    margin-bottom: 40px;
+    animation: fadeUp 0.45s ease both;
+  }
+
+  .section-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .section-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  /* responsive */
+  @media (max-width: 780px) {
+    :root { --sidebar-w: 85px; }
+    .brand-name, .brand-tag, .nav-text, .user-name, .user-role { display: none; }
+    .sidebar-brand { text-align: center; padding: 24px 0; }
+    .brand-badge { justify-content: center; }
+    .nav-item { justify-content: center; padding: 12px 0; }
+    .nav-icon { width: 22px; height: 22px; }
+    .user-chip { justify-content: center; padding: 12px 0; }
+    .user-avatar { width: 36px; height: 36px; }
+    .topbar { padding: 16px 20px; }
+    .content { padding: 28px 20px; }
+    .wip-card { padding: 32px 24px; }
+    .wip-title { font-size: 28px; }
+  }
+
+  @media (max-width: 550px) {
+    .wip-card { padding: 28px 20px; }
+    .topbar-actions .btn-ghost:first-child { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<div class="shell">
+
+  <!-- SIDEBAR CLAIRE -->
+  <aside class="sidebar">
+
+    <div class="sidebar-brand">
+      <div class="brand-badge">
+        <div class="brand-icon">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <path d="M3 7L10 2L17 7L10 12L3 7Z" />
+            <path d="M3 12L10 17L17 12" />
+            <path d="M3 7L3 12" />
+            <path d="M17 7L17 12" />
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">ATELIER</div>
+          <div class="brand-tag">lab · version claire</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="nav-section">
+      <div class="nav-label">Espace</div>
+
+      <div class="nav-item active" data-section="Accueil">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 9L10 3L17 9V16C17 16.6 16.6 17 16 17H13V12H7V17H4C3.4 17 3 16.6 3 16V9Z" />
+        </svg>
+        <span class="nav-text">Accueil</span>
+      </div>
+
+      <div class="nav-item" data-section="Apprendre">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 6L10 2L17 6L10 10L3 6Z" />
+          <path d="M3 10L10 14L17 10" />
+          <path d="M10 14L10 18" />
+          <path d="M7 12L7 16" />
+          <path d="M13 12L13 16" />
+        </svg>
+        <span class="nav-text">Apprendre</span>
+      </div>
+
+      <div class="nav-item" data-section="Cours">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="4" width="14" height="12" rx="1.5" />
+          <path d="M7 8H13M7 11H11" />
+        </svg>
+        <span class="nav-text">Cours</span>
+      </div>
+
+      <div class="nav-item" data-section="Explorer">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="10" cy="10" r="7" />
+          <path d="M13 7L8 13M8 7L13 13" />
+        </svg>
+        <span class="nav-text">Explorer</span>
+      </div>
+
+      <div class="nav-item" data-section="Progression">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 16L6 10L9 13L13 6L16 8" />
+          <circle cx="6" cy="10" r="1.2" fill="currentColor" stroke="none" />
+          <circle cx="9" cy="13" r="1.2" fill="currentColor" stroke="none" />
+          <circle cx="13" cy="6" r="1.2" fill="currentColor" stroke="none" />
+          <circle cx="16" cy="8" r="1.2" fill="currentColor" stroke="none" />
+        </svg>
+        <span class="nav-text">Progression</span>
+      </div>
+
+      <div class="nav-item" data-section="Account">
+        <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="10" cy="7" r="3.5" />
+          <path d="M3 17C3 13.7 6.1 11 10 11C13.9 11 17 13.7 17 17" />
+        </svg>
+        <span class="nav-text">Account</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-avatar">CL</div>
+        <div class="user-meta">
+          <div class="user-name">Claire Laurent</div>
+          <div class="user-role">créatrice · lab</div>
+        </div>
+        <div class="status-dot"></div>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="breadcrumb">
+          <span>Lab</span>
+          <span>›</span>
+          <span class="breadcrumb-current" id="breadcrumb-current">Accueil</span>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn-ghost">
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4"/><path d="M10 10l2.5 2.5"/></svg>
+          Explorer
+        </button>
+        <button class="btn-ghost">
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5.5"/><path d="M7 4.5v3l1.5 1.5"/></svg>
+          Récent
+        </button>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <div class="section-header">
+        <div class="section-eyebrow">Section active</div>
+        <div class="section-title" id="section-title">Accueil</div>
+      </div>
+
+      <div class="wip-container">
+        <div class="ring-deco"></div>
+
+        <div class="wip-card" id="wip-card">
+          <div class="wip-badge">
+            <span class="wip-badge-dot"></span>
+            EN DÉVELOPPEMENT
+          </div>
+          <div class="wip-title">
+            <span id="wip-title-text">Accueil</span>
+          </div>
+          <p class="wip-desc">
+            Cette section est actuellement en construction.<br/>
+            Notre équipe prépare une expérience unique<br/>
+            dans un environnement épuré et inspirant.
+          </p>
+          <div class="wip-progress">
+            <div class="wip-progress-bar"></div>
+          </div>
+          <div class="wip-progress-label">
+            <span>Avancement du module</span>
+            <span>42%</span>
+          </div>
+          <div class="section-chips" id="section-chips">
+            <div class="chip"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" stroke="currentColor" fill="none"/></svg>Interface</div>
+            <div class="chip"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" stroke="currentColor" fill="none"/></svg>Contenu</div>
+            <div class="chip"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" stroke="currentColor" fill="none"/></svg>Atelier</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  const sectionsMeta = {
+    'Accueil':     { chips: ['Accueil visuel', 'Widgets', 'Ambiance'] },
+    'Apprendre':   { chips: ['Modules', 'Parcours', 'Exercices'] },
+    'Cours':       { chips: ['Bibliothèque', 'Ressources', 'Sessions'] },
+    'Explorer':    { chips: ['Découverte', 'Carte', 'Inspiration'] },
+    'Progression': { chips: ['Objectifs', 'Métriques', 'Réussites'] },
+    'Account':     { chips: ['Profil', 'Préférences', 'Sécurité'] }
+  };
+
+  function setActiveSection(sectionName) {
+    // update nav active class
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.classList.remove('active');
+      if (item.getAttribute('data-section') === sectionName) {
+        item.classList.add('active');
+      }
+    });
+
+    // update breadcrumb + titles
+    document.getElementById('breadcrumb-current').textContent = sectionName;
+    document.getElementById('section-title').textContent = sectionName;
+    document.getElementById('wip-title-text').textContent = sectionName;
+
+    // update chips
+    const meta = sectionsMeta[sectionName] || { chips: ['Création', 'Développement', 'Bêta'] };
+    const chipsContainer = document.getElementById('section-chips');
+    chipsContainer.innerHTML = meta.chips.map(c => `
+      <div class="chip">
+        <svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" stroke="currentColor" fill="none"/></svg>
+        ${c}
+      </div>
+    `).join('');
+
+    // subtle card animation
+    const card = document.getElementById('wip-card');
+    card.style.animation = 'none';
+    card.offsetHeight;
+    card.style.animation = 'fadeUp 0.45s ease both';
+  }
+
+  // attach event listeners
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const section = item.getAttribute('data-section');
+      if (section) setActiveSection(section);
+    });
+  });
+
+  // init
+  setActiveSection('Accueil');
+</script>
+</body>
+</html>

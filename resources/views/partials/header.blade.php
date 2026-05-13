@@ -1,5 +1,6 @@
 <header>
-  <nav style="padding: 0.5rem 5%;">
+  <nav class="public-nav" style="padding: 0.5rem 5%;">
+
     <a href="{{ route('home') }}" class="logo text-primary">DEUTSCH<span
         class="text-white">WAY</span></a>
 

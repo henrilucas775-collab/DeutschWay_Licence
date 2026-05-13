@@ -13,7 +13,8 @@ header {
     backdrop-filter: blur(16px);
 }
 
-nav {
+.public-nav {
+
     display: flex;
     align-items: center;
     justify-content: space-between;
