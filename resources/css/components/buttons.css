@@ -1,0 +1,58 @@
+/* ============================================================
+   COMPONENTS — Buttons & Neon Effects
+   ============================================================ */
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    padding: .7rem 1.5rem;
+    border: 1px solid var(--primary);
+    background: transparent;
+    color: var(--fg);
+    font-family: var(--font-mono);
+    font-size: .85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    border-radius: var(--radius);
+    transition: all var(--transition);
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
+.btn-primary:hover {
+    box-shadow: var(--glow);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    border-color: var(--secondary);
+    color: var(--secondary);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 204, 0, .1);
+    box-shadow: var(--glow-sec);
+    transform: translateY(-2px);
+}
+
+/* Neon boxes */
+.neon-box {
+    border: 1px solid var(--primary);
+    box-shadow: 0 0 16px rgba(221, 0, 0, .25), inset 0 0 16px rgba(221, 0, 0, .05);
+}
+
+.neon-box-secondary {
+    border: 1px solid var(--secondary);
+    box-shadow: 0 0 16px rgba(255, 204, 0, .25), inset 0 0 16px rgba(255, 204, 0, .05);
+}

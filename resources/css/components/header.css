@@ -1,0 +1,98 @@
+/* ============================================================
+   COMPONENTS — Header & Navigation
+   ============================================================ */
+
+/* Header */
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(15, 15, 15, 0.92);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(16px);
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.8rem 2rem;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    background: transparent;
+}
+
+.logo {
+    font-family: var(--font-mono);
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--fg);
+    letter-spacing: .05em;
+}
+
+.logo span {
+    color: var(--secondary);
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+}
+
+.nav-links a {
+    color: var(--fg);
+    font-family: var(--font-mono);
+    font-size: .8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: color var(--transition);
+    letter-spacing: .08em;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--primary);
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: rgba(15, 15, 15, 0.98);
+    border: 1px solid var(--border);
+    min-width: 220px;
+    padding: .5rem;
+    border-radius: var(--radius);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, .6);
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+    animation: fadeIn .25s ease;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: .7rem 1rem;
+    border-bottom: 1px solid rgba(221, 0, 0, .08);
+    font-size: .85rem;
+}
+
+.dropdown-content a:last-child {
+    border-bottom: none;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: .75rem;
+    align-items: center;
+}

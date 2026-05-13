@@ -51,7 +51,7 @@ function stopNiveauZeroOrbital() {
     }
 }
 
-window.initNiveauZeroOrbital = function() {
+function initNiveauZeroOrbital() {
     stopNiveauZeroOrbital();
 
     const root = document.getElementById('orbital-roadmap');
@@ -254,7 +254,7 @@ window.initNiveauZeroOrbital = function() {
     niveauZeroOrbitalRafId = requestAnimationFrame(tick);
 }
 
-window.toggleMobileMenu = function() {
+function toggleMobileMenu() {
     const navLinks = document.querySelector('.nav-links');
     const authButtons = document.querySelector('.auth-buttons');
     const toggleBtn = document.querySelector('.mobile-menu-toggle');
@@ -293,9 +293,9 @@ async function typewriter(element, text, speed = 25) {
 // --- LEVEL SELECTOR WIDGET (HOME) ---
 
 const levels = [
-    { id: 0, title: "Niveau Zéro", subtitle: "Le Départ", description: "Le point de départ absolu pour ceux qui n'ont aucune base en allemand.", icon: "NZ", url: "/niveau-zero" },
-    { id: 1, title: "Fondation", subtitle: "Les Bases essentiels", description: "Maîtrisez les fondamentaux A1/A2 nécessaires pour votre survie en Allemagne.", icon: "Fd", url: "/fondations" },
-    { id: 2, title: "Immersion", subtitle: "La Fluidité", description: "Vivez l'expérience allemande en conditions réelles et atteignez le niveau B1+.", icon: "Im", url: "/immersion" }
+    { id: 0, title: "Niveau Zéro", subtitle: "Le Départ", description: "Le point de départ absolu pour ceux qui n'ont aucune base en allemand.", icon: "NZ" },
+    { id: 1, title: "Fondation", subtitle: "Les Bases essentiels", description: "Maîtrisez les fondamentaux A1/A2 nécessaires pour votre survie en Allemagne.", icon: "Fd" },
+    { id: 2, title: "Immersion", subtitle: "La Fluidité", description: "Vivez l'expérience allemande en conditions réelles et atteignez le niveau B1+.", icon: "Im" }
 ];
 
 let currentLevelIndex = 1;
@@ -311,11 +311,9 @@ function initLevelSelector() {
         const titleEl = widget.querySelector('.level-title');
         const subtitleEl = widget.querySelector('.level-subtitle');
         const descEl = widget.querySelector('.level-desc');
-        const linkEl = widget.querySelector('.level-link');
         const dots = widget.querySelectorAll('.dot');
 
         iconEl.textContent = level.icon;
-        if (linkEl) linkEl.setAttribute('href', level.url);
         dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
 
         await typewriter(titleEl, level.title, 20);
@@ -342,12 +340,12 @@ function initLevelSelector() {
 
 // --- MODAL SYSTEM ---
 
-window.openModal = function(modalId) {
+function openModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) modal.classList.add('active');
 }
 
-window.closeModal = function() {
+function closeModal() {
     document.querySelectorAll('.modal-backdrop').forEach(m => m.classList.remove('active'));
 }
 

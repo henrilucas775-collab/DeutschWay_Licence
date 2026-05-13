@@ -1,0 +1,460 @@
+/* ============================================================
+   COMPONENTS — Cards (Glass, Base, Timeline, FormDoc, Immersion 3D)
+   ============================================================ */
+
+/* Glass card */
+.glass {
+    background: rgba(30, 30, 30, .75);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(221, 0, 0, .15);
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 8px 24px rgba(221, 0, 0, .15);
+}
+
+/* Timeline */
+.timeline-node {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2.5px solid var(--border);
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+}
+
+.timeline-node::after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(80, 80, 80, .5);
+}
+
+.timeline-node.active {
+    border-color: var(--primary);
+    box-shadow: 0 0 12px rgba(221, 0, 0, .5);
+}
+
+.timeline-node.active::after {
+    background: var(--primary);
+}
+
+/* ============================================================
+   FormDoc LEVEL CARDS (Integrated from Idee_element.html)
+   ============================================================ */
+.FormDoc-card {
+    width: 100%;
+    max-width: 280px;
+    border-radius: 20px;
+    background: #1b233d;
+    padding: 5px;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 10px 30px;
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 2rem;
+    cursor: pointer;
+    text-align: left;
+}
+
+.FormDoc-card:hover {
+    transform: scale(1.05) translateY(-10px);
+}
+
+.FormDoc-card .top-section {
+    height: 140px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(45deg, var(--primary) 0%, #ff4d4d 100%);
+    position: relative;
+}
+
+.FormDoc-card.secondary .top-section {
+    background: linear-gradient(45deg, var(--secondary) 0%, #ffe066 100%);
+}
+
+.FormDoc-card.light .top-section {
+    background: white;
+}
+
+.FormDoc-card.light .top-section .icons .logo .svg {
+    fill: #1b233d;
+}
+
+.FormDoc-card.light .top-section .main-icon {
+    color: #1b233d;
+}
+
+.FormDoc-card .top-section .corner-border {
+    border-bottom-right-radius: 10px;
+    height: 30px;
+    width: 110px;
+    background: #1b233d;
+    position: relative;
+    transform: skew(-40deg);
+    left: -15px;
+    box-shadow: -10px -10px 0 0 #1b233d;
+}
+
+.FormDoc-card .top-section .corner-border::before {
+    content: "";
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    top: 0;
+    right: -15px;
+    background: transparent;
+    border-top-left-radius: 10px;
+    box-shadow: -5px -5px 0 2px #1b233d;
+}
+
+.FormDoc-card .top-section::before {
+    content: "";
+    position: absolute;
+    top: 30px;
+    left: 0;
+    background: transparent;
+    height: 15px;
+    width: 15px;
+    border-top-left-radius: 15px;
+    box-shadow: -5px -5px 0 2px #1b233d;
+}
+
+.FormDoc-card .top-section .icons {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.FormDoc-card .top-section .icons .logo {
+    height: 100%;
+    padding: 7px 0 7px 15px;
+    display: flex;
+    align-items: center;
+}
+
+.FormDoc-card .top-section .icons .logo .svg {
+    height: 18px;
+    width: 18px;
+    fill: white;
+}
+
+.FormDoc-card .top-section .icons .level-badge {
+    padding: 8px 15px;
+    display: flex;
+    gap: 7px;
+}
+
+.FormDoc-card .top-section .icons .level-badge .svg {
+    height: 16px;
+    width: 16px;
+    fill: #1b233d;
+    transition: fill 0.3s ease;
+}
+
+.FormDoc-card:hover .top-section .icons .level-badge .svg {
+    fill: white;
+}
+
+.FormDoc-card.light:hover .top-section .icons .level-badge .svg {
+    fill: var(--primary);
+}
+
+.FormDoc-card .top-section .main-icon {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 5px;
+    color: #1b233d;
+}
+
+.FormDoc-card .top-section .main-icon svg {
+    width: 50px;
+    height: 50px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.FormDoc-card .bottom-section {
+    margin-top: 10px;
+    padding: 10px 15px;
+}
+
+.FormDoc-card .bottom-section .title {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: white;
+    text-align: center;
+    letter-spacing: 1px;
+    font-family: var(--font-heading);
+    margin-bottom: 0.4rem;
+}
+
+.FormDoc-card .bottom-section .desc {
+    display: block;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    line-height: 1.4;
+    min-height: 2.8rem;
+    margin-bottom: 1rem;
+    font-family: var(--font-body);
+}
+
+.FormDoc-card .bottom-section .row {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 15px;
+    gap: 5px;
+}
+
+.FormDoc-card .bottom-section .row .item {
+    flex: 1;
+    text-align: center;
+    min-width: 0;
+}
+
+.FormDoc-card .bottom-section .row .item .big-text {
+    font-size: 9px;
+    display: block;
+    font-weight: 700;
+    color: var(--secondary);
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.FormDoc-card.secondary .bottom-section .row .item .big-text {
+    color: #ff4d4d;
+}
+
+.FormDoc-card .bottom-section .row .item .regular-text {
+    font-size: 8px;
+    color: rgba(255, 255, 255, 0.45);
+    display: block;
+}
+
+.FormDoc-card .bottom-section .row .item:nth-child(2) {
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================================
+   IMMERSION 3D CARDS
+   ============================================================ */
+.immersion-parent {
+  width: 280px;
+  height: 320px;
+  perspective: 1000px;
+  margin-bottom: 2rem;
+  cursor: pointer;
+}
+
+.immersion-card-3d {
+  height: 100%;
+  border-radius: 40px;
+  background: linear-gradient(135deg, var(--primary) 0%, #ff4d4d 100%);
+  transition: all 0.5s ease-in-out;
+  transform-style: preserve-3d;
+  box-shadow: rgba(221, 0, 0, 0) 40px 50px 25px -40px, rgba(221, 0, 0, 0.2) 0px 25px 25px -5px;
+  position: relative;
+}
+
+.immersion-card-3d.secondary {
+  background: linear-gradient(135deg, var(--secondary) 0%, #ffe066 100%);
+}
+
+.immersion-card-3d .glass {
+  transform-style: preserve-3d;
+  position: absolute;
+  inset: 8px;
+  border-radius: 45px;
+  border-top-right-radius: 100%;
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.4) 100%);
+  transform: translate3d(0px, 0px, 25px);
+  border-left: 1px solid rgba(255, 255, 255, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  transition: all 0.5s ease-in-out;
+  pointer-events: none;
+  backdrop-filter: none;
+}
+
+.immersion-card-3d .content {
+  padding: 80px 30px 0px 30px;
+  transform: translate3d(0, 0, 26px);
+  position: relative;
+  z-index: 2;
+  text-align: left;
+}
+
+.immersion-card-3d .content .title {
+  display: block;
+  color: #1b233d;
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: -0.2px;
+  text-transform: uppercase;
+  font-family: var(--font-heading);
+}
+
+.immersion-card-3d .content .text {
+  display: block;
+  color: rgba(27, 35, 61, 0.85);
+  font-size: 13px;
+  margin-top: 15px;
+  line-height: 1.4;
+  font-weight: 500;
+  font-family: var(--font-body);
+}
+
+.immersion-card-3d .bottom {
+  padding: 10px 12px;
+  transform-style: preserve-3d;
+  position: absolute;
+  bottom: 25px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transform: translate3d(0, 0, 26px);
+  z-index: 3;
+}
+
+.immersion-card-3d .bottom .view-more {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.immersion-card-3d .bottom .view-more .view-more-button {
+  background: none;
+  border: none;
+  color: #1b233d;
+  font-weight: 800;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: var(--font-mono);
+  cursor: pointer;
+}
+
+.immersion-card-3d .bottom .view-more .svg {
+  fill: none;
+  stroke: #1b233d;
+  stroke-width: 3px;
+  height: 12px;
+  width: 12px;
+}
+
+.immersion-card-3d .bottom .icon-container {
+  display: flex;
+  gap: 8px;
+  transform-style: preserve-3d;
+}
+
+.immersion-card-3d .bottom .icon-container .topic-icon {
+  width: 28px;
+  height: 28px;
+  background: white;
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 5px 10px;
+  transition: all 0.3s ease;
+}
+
+.immersion-card-3d .bottom .icon-container .topic-icon .svg {
+  width: 16px;
+  height: 16px;
+  fill: var(--primary);
+}
+
+.immersion-card-3d.secondary .bottom .icon-container .topic-icon .svg {
+  fill: var(--secondary);
+}
+
+.immersion-card-3d .bottom .icon-container .topic-icon:hover {
+  background: #1b233d;
+  transform: translate3d(0, 0, 10px);
+}
+
+.immersion-card-3d .bottom .icon-container .topic-icon:hover .svg {
+  fill: white;
+}
+
+/* LOGO concentric circles */
+.immersion-card-3d .logo-3d {
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform-style: preserve-3d;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.immersion-card-3d .logo-3d .circle {
+  display: block;
+  position: absolute;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  top: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(2px);
+  transition: all 0.5s ease-in-out;
+}
+
+.immersion-card-3d .logo-3d .circle1 { width: 150px; transform: translate3d(0, 0, 10px); top: 8px; right: 8px; }
+.immersion-card-3d .logo-3d .circle2 { width: 120px; transform: translate3d(0, 0, 25px); top: 12px; right: 12px; transition-delay: 0.1s; }
+.immersion-card-3d .logo-3d .circle3 { width: 90px; transform: translate3d(0, 0, 40px); top: 18px; right: 18px; transition-delay: 0.2s; }
+.immersion-card-3d .logo-3d .circle4 { width: 65px; transform: translate3d(0, 0, 55px); top: 24px; right: 24px; transition-delay: 0.3s; }
+.immersion-card-3d .logo-3d .circle5 { width: 45px; transform: translate3d(0, 0, 70px); top: 30px; right: 30px; display: grid; place-content: center; background: rgba(255, 255, 255, 0.3); transition-delay: 0.4s; }
+
+.immersion-card-3d .logo-3d .circle5 .svg {
+  width: 20px;
+  fill: #1b233d;
+}
+
+/* HOVER EFFECTS */
+.immersion-parent:hover .immersion-card-3d {
+  transform: rotate3d(1, 1, 0, 20deg);
+  box-shadow: rgba(0, 0, 0, 0.2) 30px 50px 25px -40px, rgba(0, 0, 0, 0.1) 0px 25px 30px 0px;
+}
+
+.immersion-parent:hover .immersion-card-3d .bottom .icon-container .topic-icon {
+  transform: translate3d(0, 0, 40px);
+}
+
+.immersion-parent:hover .immersion-card-3d .logo-3d .circle2 { transform: translate3d(0, 0, 45px); }
+.immersion-parent:hover .immersion-card-3d .logo-3d .circle3 { transform: translate3d(0, 0, 65px); }
+.immersion-parent:hover .immersion-card-3d .logo-3d .circle4 { transform: translate3d(0, 0, 85px); }
+.immersion-parent:hover .immersion-card-3d .logo-3d .circle5 { transform: translate3d(0, 0, 105px); }
+
+.immersion-parent:hover .immersion-card-3d .glass {
+  transform: translate3d(0px, 0px, 32px);
+}
