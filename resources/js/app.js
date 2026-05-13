@@ -351,16 +351,20 @@ window.closeModal = function() {
     document.querySelectorAll('.modal-backdrop').forEach(m => m.classList.remove('active'));
 }
 
-// --- INITIALIZATION ---
+// --- INITIALIZATION & SPA HANDLING ---
 
-window.onload = () => {
-    // Detect current page based on filename
+function initApp() {
+    // Detect current page
     const path = window.location.pathname;
-    const page = path.split("/").pop().replace(".php", "") || 'index';
+    const segments = path.split("/").filter(Boolean);
+    const page = segments.length > 0 ? segments[segments.length - 1] : 'home';
 
-    if (page === 'index' || page === '') {
+    // Reset active links
+    document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+
+    // Set active link
+    if (page === 'home' || path === '/') {
         initLevelSelector();
-        // Set active link
         const homeLink = document.getElementById('nav-home');
         if (homeLink) homeLink.classList.add('active');
     } else {
@@ -376,18 +380,32 @@ window.onload = () => {
     const forms = document.querySelectorAll('form');
     forms.forEach(form => {
         form.onsubmit = (e) => {
-            e.preventDefault();
-            showNotification('Opération réussie !');
+            // Only prevent if it doesn't have an action (like our mock forms)
+            if (!form.getAttribute('action')) {
+                e.preventDefault();
+                showNotification('Opération réussie !');
+            }
         };
     });
+}
 
-    // Mobile menu resize handling
-    window.addEventListener('resize', () => {
-        if (window.innerWidth > 768) {
-            const navLinks = document.querySelector('.nav-links');
-            const authButtons = document.querySelector('.auth-buttons');
-            if (navLinks) navLinks.classList.remove('mobile-active');
-            if (authButtons) authButtons.classList.remove('mobile-active');
-        }
-    });
-};
+// Handle mobile menu resize
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+        const navLinks = document.querySelector('.nav-links');
+        const authButtons = document.querySelector('.auth-buttons');
+        if (navLinks) navLinks.classList.remove('mobile-active');
+        if (authButtons) authButtons.classList.remove('mobile-active');
+    }
+});
+
+// SPA Lifecycle - Re-run init on each navigation
+document.addEventListener('livewire:navigated', () => {
+    // Stop any running animations/intervals from previous page
+    stopNiveauZeroOrbital();
+    if (levelTimer) clearInterval(levelTimer);
+    
+    // Re-initialize for new page
+    initApp();
+});
+

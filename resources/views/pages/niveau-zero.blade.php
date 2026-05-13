@@ -149,7 +149,7 @@
                 <h2 class="glow-text mb-4 uppercase">DÉBLOQUER L'ACCÈS COMPLET</h2>
                 <p class="text-muted mb-8 font-mono mx-auto" style="max-width:36rem; line-height:1.7;">Maîtrisez les 5
                     modules du Niveau Zéro et obtenez votre badge de certification.</p>
-                <a href="{{ route('register') }}" class="btn btn-primary neon-box" style="padding:1.1rem 2.5rem;">SOUSCRIRE À L'OFFRE</a>
+                <a href="{{ route('register') }}" class="btn btn-primary neon-box" style="padding:1.1rem 2.5rem;" wire:navigate>SOUSCRIRE À L'OFFRE</a>
             </div>
         </div>
     </section>

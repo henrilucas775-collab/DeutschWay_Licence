@@ -87,7 +87,7 @@
                 <h2 class="glow-text mb-4 uppercase">PRÉPAREZ VOTRE EXPATRIATION</h2>
                 <p class="text-muted mb-8 font-mono mx-auto" style="max-width:36rem; line-height:1.7;">Nos modules
                     d'immersion vous évitent le choc culturel et vous donnent toutes les clés d'une intégration réussie.</p>
-                <a href="{{ route('register') }}" class="btn btn-primary neon-box" style="padding:1.1rem 2.5rem;">DÉCOUVRIR LE LAB D'IMMERSION</a>
+                <a href="{{ route('register') }}" class="btn btn-primary neon-box" style="padding:1.1rem 2.5rem;" wire:navigate>DÉCOUVRIR LE LAB D'IMMERSION</a>
             </div>
         </div>
     </section>

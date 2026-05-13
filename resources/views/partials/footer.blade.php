@@ -65,15 +65,15 @@
           <div>
             <h3 class="footer-title text-sm font-semibold uppercase text-secondary mb-3">Explorer</h3>
             <ul class="footer-links space-y-2">
-              <li><a href="{{ route('about') }}" class="text-sm text-foreground/70 transition-colors hover:text-primary">À propos</a>
+              <li><a href="{{ route('about') }}" class="text-sm text-foreground/70 transition-colors hover:text-primary" wire:navigate.hover>À propos</a>
               </li>
               <li><a href="{{ route('niveau-zero') }}"
-                  class="text-sm text-foreground/70 transition-colors hover:text-primary">Niveau Zéro</a></li>
+                  class="text-sm text-foreground/70 transition-colors hover:text-primary" wire:navigate.hover>Niveau Zéro</a></li>
               <li><a href="{{ route('fondations') }}"
-                  class="text-sm text-foreground/70 transition-colors hover:text-primary">Parcours Fondations</a></li>
-              <li><a href="{{ route('immersion') }}" class="text-sm text-foreground/70 transition-colors hover:text-primary">Immersion</a></li>
+                  class="text-sm text-foreground/70 transition-colors hover:text-primary" wire:navigate.hover>Parcours Fondations</a></li>
+              <li><a href="{{ route('immersion') }}" class="text-sm text-foreground/70 transition-colors hover:text-primary" wire:navigate.hover>Immersion</a></li>
               <li><a href="{{ route('community') }}"
-                  class="text-sm text-foreground/70 transition-colors hover:text-primary">Communauté</a></li>
+                  class="text-sm text-foreground/70 transition-colors hover:text-primary" wire:navigate.hover>Communauté</a></li>
             </ul>
           </div>
 

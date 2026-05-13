@@ -124,7 +124,7 @@
             <div class="card glass neon-box text-center" style="padding:4rem 2rem; border-radius:1.5rem;">
                 <h2 class="font-mono mb-6" style="font-size:2rem;">Rejoins la <span class="neon-glow">communauté</span></h2>
                 <p class="text-muted font-mono mb-8" style="max-width:36rem; margin:0 auto 2rem;">Connecte-toi with d'autres apprenants et accélère ta progression.</p>
-                <a href="{{ route('register') }}" class="btn btn-secondary neon-box-secondary" style="padding:1.1rem 2.5rem;">REJOINDRE MAINTENANT</a>
+                <a href="{{ route('register') }}" class="btn btn-secondary neon-box-secondary" style="padding:1.1rem 2.5rem;" wire:navigate>REJOINDRE MAINTENANT</a>
             </div>
 
         </div>

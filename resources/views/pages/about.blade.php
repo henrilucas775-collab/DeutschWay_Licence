@@ -237,7 +237,7 @@
                     <h3>Ready to transform your space?</h3>
                     <p>Let's create something beautiful together.</p>
                 </div>
-                <a href="{{ route('register') }}" class="cta-btn">
+                <a href="{{ route('register') }}" class="cta-btn" wire:navigate>
                     Get Started
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <line x1="5" y1="12" x2="19" y2="12" />
@@ -313,7 +313,7 @@
             <div class="card glass neon-box text-center mx-auto" style="padding: 4rem 2rem; border-radius: 2rem; max-width:56rem;">
                 <h2 class="font-mono mb-6" style="font-size:2.2rem;">Prêt à <span class="text-secondary neon-glow-sec">commencer</span> ?</h2>
                 <p class="text-muted font-mono mb-8" style="max-width:36rem; margin:0 auto 2rem;">Rejoins la communauté DeutschWay et prépare ton avenir en Allemagne.</p>
-                <a href="{{ route('register') }}" class="btn btn-primary neon-box" style="padding: 1.2rem 3rem;">S'INSCRIRE MAINTENANT</a>
+                <a href="{{ route('register') }}" class="btn btn-primary neon-box" style="padding: 1.2rem 3rem;" wire:navigate>S'INSCRIRE MAINTENANT</a>
             </div>
         </div>
     </section>

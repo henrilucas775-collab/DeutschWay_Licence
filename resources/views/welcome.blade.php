@@ -29,7 +29,7 @@
                     </p>
                     <div class="flex flex-wrap gap-4 mb-12">
                         <a href="{{ route('register') }}" class="btn btn-primary neon-box"
-                            style="padding:1.1rem 2.2rem; font-size:1rem;">
+                            style="padding:1.1rem 2.2rem; font-size:1rem;" wire:navigate>
                             Commencer maintenant
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2">
@@ -38,7 +38,7 @@
                             </svg>
                         </a>
                         <a href="{{ route('about') }}" class="btn btn-secondary neon-box-secondary"
-                            style="padding:1.1rem 2.2rem; font-size:1rem;">
+                            style="padding:1.1rem 2.2rem; font-size:1rem;" wire:navigate>
                             En savoir plus
                         </a>
                     </div>
@@ -57,7 +57,7 @@
                                 <span class="level-subtitle block font-bold text-foreground mb-2"
                                     style="font-size:1.05rem;"></span>
                                 <span class="level-desc text-muted block mb-4" style="font-size:.875rem; line-height:1.6;"></span>
-                                <a href="#" class="level-link btn btn-primary w-full" style="padding: 0.5rem; font-size: 0.8rem; border-radius: 0.5rem; text-decoration: none; display: block; text-align: center;">DÉCOUVRIR</a>
+                                <a href="#" class="level-link btn btn-primary w-full" style="padding: 0.5rem; font-size: 0.8rem; border-radius: 0.5rem; text-decoration: none; display: block; text-align: center;" wire:navigate>DÉCOUVRIR</a>
                             </div>
                             <!-- Pointe bas -->
                             <div
@@ -256,7 +256,7 @@
                     nous faisons de l'apprentissage une aventure collective tournée vers un avenir solide.
                 </p>
                 <a href="{{ route('register') }}" class="btn btn-secondary neon-box-secondary"
-                    style="padding:1.2rem 3rem; font-size:1rem;">
+                    style="padding:1.2rem 3rem; font-size:1rem;" wire:navigate>
                     COMMENCER GRATUITEMENT
                 </a>
             </div>
