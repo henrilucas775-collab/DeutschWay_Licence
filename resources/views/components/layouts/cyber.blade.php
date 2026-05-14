@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" class="dark">
+<html lang="fr" class="dark max-w-full overflow-x-hidden">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,9 +13,9 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @fluxStyles
 </head>
-<body class="starfield-bg antialiased">
+<body class="starfield-bg antialiased min-w-0 overflow-x-hidden">
     <div id="particles-js"></div>
-    <div id="app">
+    <div id="app" class="min-w-0 max-w-full overflow-x-hidden">
         {{-- Navigation --}}
         @include('partials.header')
 

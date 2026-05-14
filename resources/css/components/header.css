@@ -3,14 +3,18 @@
    ============================================================ */
 
 /* Header */
+/* Éviter backdrop-filter ici : il réduit le bloc de positionnement des `position:fixed` (tiroir). */
 header {
     position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
     z-index: 1000;
-    background: rgba(15, 15, 15, 0.92);
+    background: rgba(15, 15, 15, 0.96);
     border-bottom: 1px solid var(--border);
-    backdrop-filter: blur(16px);
 }
 
 .public-nav {
@@ -20,7 +24,8 @@ header {
     justify-content: space-between;
     padding: 0.8rem 2rem;
     width: 100%;
-    max-width: none;
+    max-width: 100%;
+    min-width: 0;
     margin: 0;
     background: transparent;
 }
@@ -96,4 +101,36 @@ header {
     display: flex;
     gap: .75rem;
     align-items: center;
+}
+
+/* —— Navigation publique : tiroir (aligné sur le lab) —— */
+.public-mobile-root {
+    position: relative;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.public-nav-overlay {
+    display: none;
+    pointer-events: none;
+}
+
+.public-nav-overlay.is-open {
+    pointer-events: auto;
+}
+
+.public-nav-drawer {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 2rem;
+    min-width: 0;
+}
+
+@media (min-width: 769px) {
+    .public-nav-overlay {
+        display: none !important;
+    }
 }

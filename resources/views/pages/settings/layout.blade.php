@@ -1,20 +1,46 @@
-<div class="flex items-start max-md:flex-col">
-    <div class="me-10 w-full pb-4 md:w-[220px]">
-        <flux:navlist aria-label="{{ __('Settings') }}">
-            <flux:navlist.item :href="route('profile.edit')" wire:navigate>{{ __('Profile') }}</flux:navlist.item>
-            <flux:navlist.item :href="route('security.edit')" wire:navigate>{{ __('Security') }}</flux:navlist.item>
-            <flux:navlist.item :href="route('appearance.edit')" wire:navigate>{{ __('Appearance') }}</flux:navlist.item>
-        </flux:navlist>
-    </div>
+<div class="lab-account-shell">
+    <aside class="lab-account-snav-wrap">
+        <nav class="lab-account-snav" aria-label="{{ __('Settings navigation') }}">
+            <span class="lab-account-snav-label">{{ __('Sections') }}</span>
+            <a
+                href="{{ route('profile.edit') }}"
+                wire:navigate
+                @click="mobileNavOpen = false"
+                class="lab-account-snav-item {{ request()->routeIs('profile.edit') ? 'is-active' : '' }}"
+            >
+                <svg class="lab-account-snav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+                {{ __('Profile') }}
+            </a>
+            <a
+                href="{{ route('security.edit') }}"
+                wire:navigate
+                @click="mobileNavOpen = false"
+                class="lab-account-snav-item {{ request()->routeIs('security.edit') ? 'is-active' : '' }}"
+            >
+                <svg class="lab-account-snav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                {{ __('Security') }}
+            </a>
+            <a
+                href="{{ route('appearance.edit') }}"
+                wire:navigate
+                @click="mobileNavOpen = false"
+                class="lab-account-snav-item {{ request()->routeIs('appearance.edit') ? 'is-active' : '' }}"
+            >
+                <svg class="lab-account-snav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 8v4l3 3" />
+                </svg>
+                {{ __('Appearance') }}
+            </a>
+        </nav>
+    </aside>
 
-    <flux:separator class="md:hidden" />
-
-    <div class="flex-1 self-stretch max-md:pt-6">
-        <flux:heading>{{ $heading ?? '' }}</flux:heading>
-        <flux:subheading>{{ $subheading ?? '' }}</flux:subheading>
-
-        <div class="mt-5 w-full max-w-lg">
-            {{ $slot }}
-        </div>
+    <div class="lab-account-panel">
+        {{ $slot }}
     </div>
 </div>

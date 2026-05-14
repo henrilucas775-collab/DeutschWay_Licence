@@ -254,22 +254,6 @@ window.initNiveauZeroOrbital = function() {
     niveauZeroOrbitalRafId = requestAnimationFrame(tick);
 }
 
-window.toggleMobileMenu = function() {
-    const navLinks = document.querySelector('.nav-links');
-    const authButtons = document.querySelector('.auth-buttons');
-    const toggleBtn = document.querySelector('.mobile-menu-toggle');
-    
-    const isExpanded = navLinks.classList.contains('mobile-active');
-    
-    navLinks.classList.toggle('mobile-active');
-    authButtons.classList.toggle('mobile-active');
-    
-    if (toggleBtn) {
-        toggleBtn.setAttribute('aria-expanded', !isExpanded);
-        toggleBtn.setAttribute('aria-label', !isExpanded ? 'Fermer le menu' : 'Ouvrir le menu');
-    }
-}
-
 function showNotification(message, type = 'success') {
     const toast = document.getElementById('notification');
     if (!toast) return;
@@ -388,16 +372,6 @@ function initApp() {
         };
     });
 }
-
-// Handle mobile menu resize
-window.addEventListener('resize', () => {
-    if (window.innerWidth > 768) {
-        const navLinks = document.querySelector('.nav-links');
-        const authButtons = document.querySelector('.auth-buttons');
-        if (navLinks) navLinks.classList.remove('mobile-active');
-        if (authButtons) authButtons.classList.remove('mobile-active');
-    }
-});
 
 // SPA Lifecycle - Re-run init on each navigation
 document.addEventListener('livewire:navigated', () => {

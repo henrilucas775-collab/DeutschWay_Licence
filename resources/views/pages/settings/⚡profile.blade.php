@@ -12,6 +12,7 @@ new #[Title('Profile settings')] class extends Component {
     use ProfileValidationRules;
 
     public string $name = '';
+
     public string $email = '';
 
     /**
@@ -75,38 +76,67 @@ new #[Title('Profile settings')] class extends Component {
     }
 }; ?>
 
-<section class="w-full">
+<section class="lab-account-theme w-full">
     @include('partials.settings-heading')
 
     <flux:heading class="sr-only">{{ __('Profile settings') }}</flux:heading>
 
-    <x-pages::settings.layout :heading="__('Profile')" :subheading="__('Update your name and email address')">
-        <form wire:submit="updateProfileInformation" class="my-6 w-full space-y-6">
-            <flux:input wire:model="name" :label="__('Name')" type="text" required autofocus autocomplete="name" />
-
-            <div>
-                <flux:input wire:model="email" :label="__('Email')" type="email" required autocomplete="email" />
-
-                @if ($this->hasUnverifiedEmail)
-                    <div>
-                        <flux:text class="mt-4">
-                            {{ __('Your email address is unverified.') }}
-
-                            <flux:link class="text-sm cursor-pointer" wire:click.prevent="resendVerificationNotification">
-                                {{ __('Click here to re-send the verification email.') }}
-                            </flux:link>
-                        </flux:text>
-
+    <x-pages::settings.layout>
+        <div class="lab-account-card">
+            <div class="lab-account-card-header">
+                <div class="lab-account-card-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    {{ __('Personal information') }}
+                </div>
+                <p class="lab-account-card-desc">{{ __('This information may be visible to instructors or support when you contact us.') }}</p>
+            </div>
+            <div class="lab-account-card-body">
+                <div class="lab-account-avatar-row">
+                    <div class="lab-account-avatar-lg" aria-hidden="true">{{ auth()->user()->initials() }}</div>
+                    <div class="lab-account-avatar-meta">
+                        <div class="lab-account-avatar-name">{{ auth()->user()->name }}</div>
+                        <div class="lab-account-avatar-email">{{ auth()->user()->email }}</div>
+                        <span class="lab-account-photo-btn" title="{{ __('Coming soon') }}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="17 8 12 3 7 8" />
+                                <line x1="12" x2="12" y1="3" y2="15" />
+                            </svg>
+                            {{ __('Change photo') }}
+                        </span>
                     </div>
-                @endif
-            </div>
+                </div>
 
-            <div class="flex items-center gap-4">
-                <flux:button variant="primary" type="submit" data-test="update-profile-button">
-                    {{ __('Save') }}
-                </flux:button>
+                <div class="lab-account-divider"></div>
+
+                <form wire:submit="updateProfileInformation" class="space-y-6">
+                    <flux:input wire:model="name" :label="__('Name')" type="text" required autofocus autocomplete="name" />
+
+                    <div>
+                        <flux:input wire:model="email" :label="__('Email')" type="email" required autocomplete="email" />
+
+                        @if ($this->hasUnverifiedEmail)
+                            <flux:text class="mt-4">
+                                {{ __('Your email address is unverified.') }}
+
+                                <flux:link class="cursor-pointer text-sm" wire:click.prevent="resendVerificationNotification">
+                                    {{ __('Click here to re-send the verification email.') }}
+                                </flux:link>
+                            </flux:text>
+                        @endif
+                    </div>
+
+                    <div class="lab-account-form-actions">
+                        <flux:button variant="primary" type="submit" data-test="update-profile-button">
+                            {{ __('Save') }}
+                        </flux:button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
 
         @if ($this->showDeleteUser)
             <livewire:pages::settings.delete-user-form />
