@@ -10,11 +10,11 @@ Route::view('/fondations', 'pages.fondations')->name('fondations');
 Route::view('/immersion', 'pages.immersion')->name('immersion');
 
 Route::middleware(['auth'])->group(function () {
-    Route::view('dashboard', 'dashboard')->name('dashboard');
-    Route::view('lab/apprendre', 'layouts.app.apprendre')->name('lab.apprendre');
-    Route::view('lab/cours', 'layouts.app.cours')->name('lab.cours');
-    Route::view('lab/explorer', 'layouts.app.explorer')->name('lab.explorer');
-    Route::view('lab/progression', 'layouts.app.progression')->name('lab.progression');
+    Route::view('dashboard', 'app.dashboard')->name('dashboard');
+    Route::view('lab/apprendre', 'app.apprendre')->name('lab.apprendre');
+    Route::view('lab/cours', 'app.cours')->name('lab.cours');
+    Route::view('lab/explorer', 'app.explorer')->name('lab.explorer');
+    Route::view('lab/progression', 'app.progression')->name('lab.progression');
 });
 
 require __DIR__.'/settings.php';

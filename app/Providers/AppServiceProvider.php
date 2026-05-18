@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
@@ -24,6 +25,19 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureViews();
+    }
+
+    /**
+     * Configure view resolution paths for the Lab space.
+     */
+    protected function configureViews(): void
+    {
+        // Allow <x-app.settings.layout> to resolve from resources/views/app/settings/
+        Blade::anonymousComponentPath(resource_path('views'));
+
+        // Allow Livewire to discover SFC components from resources/views/
+        app('livewire.finder')->addLocation(resource_path('views'));
     }
 
     /**

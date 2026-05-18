@@ -93,7 +93,7 @@ new #[Title('Security settings')] class extends Component {
 
     <flux:heading class="sr-only">{{ __('Security settings') }}</flux:heading>
 
-    <x-pages::settings.layout>
+    <x-app.settings.layout>
         <div class="lab-account-card">
             <div class="lab-account-card-header">
                 <div class="lab-account-card-title">
@@ -170,7 +170,7 @@ new #[Title('Security settings')] class extends Component {
                                     </flux:button>
                                 </div>
 
-                                <livewire:pages::settings.two-factor.recovery-codes :$requiresConfirmation />
+                                <livewire:app.settings.two-factor.recovery-codes :$requiresConfirmation />
                             </div>
                         @else
                             <div class="space-y-4">
@@ -184,12 +184,12 @@ new #[Title('Security settings')] class extends Component {
                                     </flux:button>
                                 </flux:modal.trigger>
 
-                                <livewire:pages::settings.two-factor-setup-modal :requires-confirmation="$requiresConfirmation" />
+                                <livewire:app.settings.two-factor-setup-modal :requires-confirmation="$requiresConfirmation" />
                             </div>
                         @endif
                     </div>
                 </div>
             </div>
         @endif
-    </x-pages::settings.layout>
+    </x-app.settings.layout>
 </section>

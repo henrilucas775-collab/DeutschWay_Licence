@@ -25,6 +25,6 @@ new class extends Component {}; ?>
             </flux:button>
         </flux:modal.trigger>
 
-        <livewire:pages::settings.delete-user-modal />
+        <livewire:app.settings.delete-user-modal />
     </div>
 </div>

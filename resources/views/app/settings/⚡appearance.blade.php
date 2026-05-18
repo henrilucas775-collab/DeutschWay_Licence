@@ -12,7 +12,7 @@ new #[Title('Appearance settings')] class extends Component {
 
     <flux:heading class="sr-only">{{ __('Appearance settings') }}</flux:heading>
 
-    <x-pages::settings.layout>
+    <x-app.settings.layout>
         <div class="lab-account-card">
             <div class="lab-account-card-header">
                 <div class="lab-account-card-title" style="color: var(--accent);">
@@ -70,5 +70,5 @@ new #[Title('Appearance settings')] class extends Component {
                 </div>
             </div>
         </div>
-    </x-pages::settings.layout>
+    </x-app.settings.layout>
 </section>

@@ -81,7 +81,7 @@ new #[Title('Profile settings')] class extends Component {
 
     <flux:heading class="sr-only">{{ __('Profile settings') }}</flux:heading>
 
-    <x-pages::settings.layout>
+    <x-app.settings.layout>
         <div class="lab-account-card">
             <div class="lab-account-card-header">
                 <div class="lab-account-card-title">
@@ -139,7 +139,7 @@ new #[Title('Profile settings')] class extends Component {
         </div>
 
         @if ($this->showDeleteUser)
-            <livewire:pages::settings.delete-user-form />
+            <livewire:app.settings.delete-user-form />
         @endif
-    </x-pages::settings.layout>
+    </x-app.settings.layout>
 </section>
