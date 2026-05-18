@@ -137,7 +137,7 @@ new #[Title('Security settings')] class extends Component {
                     />
 
                     <div class="lab-account-form-actions">
-                        <flux:button variant="primary" type="submit" data-test="update-password-button">
+                        <flux:button variant="primary" type="submit" data-test="update-password-button" style="color: var(--accent);" >
                             {{ __('Save') }}
                         </flux:button>
                     </div>

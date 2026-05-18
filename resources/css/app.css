@@ -87,7 +87,6 @@
 /* Layouts */
 @import './layouts/grid.css';
 @import './layouts/footer.css';
-@import './layouts/responsive.css';
 
 /* Components */
 @import './components/header.css';
@@ -99,3 +98,6 @@
 /* Pages */
 @import './pages/niveau-zero.css';
 @import './pages/about.css';
+
+/* Responsive (Must be last) */
+@import './layouts/responsive.css';

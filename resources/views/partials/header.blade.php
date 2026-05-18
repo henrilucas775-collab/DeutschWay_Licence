@@ -25,7 +25,7 @@
                 :aria-label="mobileNavOpen ? 'Fermer le menu' : 'Ouvrir le menu'"
                 aria-controls="public-nav-drawer"
             >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <svg width="45" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <line x1="3" y1="12" x2="21" y2="12"></line>
                     <line x1="3" y1="6" x2="21" y2="6"></line>
                     <line x1="3" y1="18" x2="21" y2="18"></line>
@@ -38,10 +38,13 @@
                 :class="{ 'public-nav-drawer--open': mobileNavOpen }"
             >
                 <ul class="nav-links">
+                    
                     <li><a href="{{ route('home') }}" id="nav-home" wire:navigate.hover @click="mobileNavOpen = false">ACCUEIL</a></li>
-                    <li class="dropdown">
-                        <a href="#" id="nav-parcours" onclick="return false;" aria-haspopup="true" aria-expanded="false">PARCOURS ▾</a>
-                        <div class="dropdown-content glass" role="menu">
+                    <li class="dropdown" x-data="{ open: false }" @click.away="open = false">
+                        <a href="#" id="nav-parcours" @click.prevent="open = !open" aria-haspopup="true" :aria-expanded="open">
+                            PARCOURS <span :class="{ 'rotate-180': open }" class="inline-block transition-transform duration-200">▾</span>
+                        </a>
+                        <div class="dropdown-content glass" :class="{ 'show-mobile': open }" role="menu">
                             <a href="{{ route('niveau-zero') }}" wire:navigate.hover @click="mobileNavOpen = false">NIVEAU ZÉRO </a>
                             <a href="{{ route('fondations') }}" wire:navigate.hover @click="mobileNavOpen = false">FONDATIONS (A1-B1)</a>
                             <a href="{{ route('immersion') }}" wire:navigate.hover @click="mobileNavOpen = false">IMMERSION (B2-C1)</a>
@@ -59,11 +62,32 @@
 
                     @auth
                         <flux:dropdown position="bottom" align="end">
-                            <flux:profile
-                                :initials="auth()->user()->initials()"
-                                icon-trailing="chevron-down"
-                                class="cursor-pointer"
-                            />
+                            <button
+                                type="button"
+                                class="group flex w-full cursor-pointer items-center rounded-lg p-1 text-start hover:bg-zinc-800/5 has-data-[circle=true]:rounded-full dark:hover:bg-white/15 [ui-dropdown>&]:w-full"
+                                data-flux-profile
+                            >
+                                <div class="shrink-0">
+                                    <flux:avatar
+                                        :name="auth()->user()->name"
+                                        :initials="auth()->user()->initials()"
+                                        size="sm"
+                                    />
+                                </div>
+                                <span style="width: 10px;"> </span>
+                                <div class="grid min-w-0 flex-1 text-start text-sm leading-tight">
+                                    <flux:heading class="truncate">{{ auth()->user()->name }}</flux:heading>
+                                    <flux:text inline size="sm" class="truncate">{{ auth()->user()->email }}</flux:text>
+                                </div>
+
+                                <div class="flex size-8 shrink-0 items-center justify-center ms-auto">
+                                    <flux:icon
+                                        name="chevron-down"
+                                        variant="micro"
+                                        class="shrink-0 text-zinc-400 group-hover:text-zinc-800 dark:text-white/80 dark:group-hover:text-white [:where(&)]:size-4"
+                                    />
+                                </div>
+                            </button>
 
                             <flux:menu class="min-w-64">
                                 <div class="flex items-center gap-2 px-3 py-2 text-start">
@@ -76,11 +100,11 @@
 
                                 <flux:menu.separator />
 
-                                <flux:menu.item icon="layout-grid" :href="route('dashboard')" wire:navigate>
+                                <flux:menu.item icon="layout-grid" :href="route('dashboard')" wire:navigate style="padding: 5px;">
                                     Accède à mon Lab
                                 </flux:menu.item>
 
-                                <flux:menu.item icon="cog" :href="route('profile.edit')" wire:navigate>
+                                <flux:menu.item icon="cog" :href="route('profile.edit')" wire:navigate style="padding: 5px;">
                                     Paramètres
                                 </flux:menu.item>
 
@@ -88,7 +112,7 @@
 
                                 <form method="POST" action="{{ route('logout') }}" class="w-full">
                                     @csrf
-                                    <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full">
+                                    <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full" style="padding: 5px;">
                                         Déconnecté
                                     </flux:menu.item>
                                 </form>

@@ -65,6 +65,9 @@
 }
 
 @media (max-width: 768px) {
+    .public-mobile-root {
+        overflow-x: hidden;
+    }
 
     .grid-2,
     .grid-3,
@@ -160,12 +163,16 @@
 
     .dropdown-content {
         position: static;
-        display: block !important;
+        display: none;
         background: transparent;
         box-shadow: none;
         padding-left: 1rem;
         border-left: 1px solid var(--primary);
         margin-top: 0.5rem;
+    }
+    
+    .dropdown-content.show-mobile {
+        display: block !important;
     }
 
     .footer-grid {
@@ -203,7 +210,7 @@
     }
 
     .destination-decor {
-        display: none;
+        display: block;
     }
 
     .hidden-mobile {

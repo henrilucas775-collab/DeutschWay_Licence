@@ -2,6 +2,33 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="light">
     <head>
         @include('partials.head')
+        <script>
+            function applyAccentColor() {
+                const c = localStorage.getItem('accentColor');
+                if (c) {
+                    let r = parseInt(c.slice(1, 3), 16) || 91,
+                        g = parseInt(c.slice(3, 5), 16) || 127,
+                        b = parseInt(c.slice(5, 7), 16) || 255;
+                    let styleEl = document.getElementById('dynamic-accent-style');
+                    if (!styleEl) {
+                        styleEl = document.createElement('style');
+                        styleEl.id = 'dynamic-accent-style';
+                        document.head.appendChild(styleEl);
+                    }
+                    styleEl.innerHTML = `
+                        :root, .lab-account-theme, .lab-account-panel, body {
+                            --color-primary: ${c} !important;
+                            --color-accent: ${c} !important;
+                            --lab-accent: ${c} !important;
+                            --lab-ui-accent: ${c} !important;
+                            --lab-ui-accent-soft: rgba(${r}, ${g}, ${b}, 0.1) !important;
+                        }
+                    `;
+                }
+            }
+            applyAccentColor();
+            document.addEventListener('livewire:navigated', applyAccentColor);
+        </script>
     </head>
     <body class="min-h-screen overflow-x-hidden">
         <div

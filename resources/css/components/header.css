@@ -108,7 +108,6 @@ header {
     position: relative;
     min-width: 0;
     max-width: 100%;
-    overflow-x: hidden;
 }
 
 .public-nav-overlay {
@@ -130,6 +129,17 @@ header {
 }
 
 @media (min-width: 769px) {
+    .public-nav {
+        position: relative;
+    }
+
+    .nav-links {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        margin: 0;
+    }
+
     .public-nav-overlay {
         display: none !important;
     }
