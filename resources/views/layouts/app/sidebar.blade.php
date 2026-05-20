@@ -80,6 +80,16 @@
                         </li>
 
                         <li>
+                            <a href="{{ route('lab.cours') }}" class="lab-nav-item {{ request()->routeIs('lab.cours') ? 'active' : '' }}" wire:navigate @click="mobileNavOpen = false">
+                                <svg class="lab-nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <rect x="3" y="4" width="14" height="12" rx="1.5" />
+                                    <path d="M7 8H13M7 11H11" />
+                                </svg>
+                                <span class="lab-nav-text">Cours</span>
+                            </a>
+                        </li>
+
+                        <li>
                             <a href="{{ route('lab.apprendre') }}" class="lab-nav-item {{ request()->routeIs('lab.apprendre') ? 'active' : '' }}" wire:navigate @click="mobileNavOpen = false">
                                 <svg class="lab-nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
                                     <path d="M3 6L10 2L17 6L10 10L3 6Z" />
@@ -92,15 +102,7 @@
                             </a>
                         </li>
 
-                        <li>
-                            <a href="{{ route('lab.cours') }}" class="lab-nav-item {{ request()->routeIs('lab.cours') ? 'active' : '' }}" wire:navigate @click="mobileNavOpen = false">
-                                <svg class="lab-nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <rect x="3" y="4" width="14" height="12" rx="1.5" />
-                                    <path d="M7 8H13M7 11H11" />
-                                </svg>
-                                <span class="lab-nav-text">Cours</span>
-                            </a>
-                        </li>
+
 
                         <li>
                             <a href="{{ route('lab.explorer') }}" class="lab-nav-item {{ request()->routeIs('lab.explorer') ? 'active' : '' }}" wire:navigate @click="mobileNavOpen = false">

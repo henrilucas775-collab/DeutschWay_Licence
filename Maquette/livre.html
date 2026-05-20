@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Bibliothèque Interactive 3D | Expérience Immersive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --book-width: 220px;
+      --book-height: 320px;
+      --transition-speed: 0.6s;
+      --gold: #d4af37;
+      --open-angle: -80deg;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Poppins', sans-serif;
+      padding: 2rem;
+      color: #f8fafc;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 2.5rem;
+      margin-bottom: 3rem;
+      text-align: center;
+      letter-spacing: 0.2rem;
+      color: var(--gold);
+      text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    }
+
+    .books-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 4rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      perspective: 1500px;
+    }
+
+    /* Style du livre */
+    .book {
+      position: relative;
+      width: var(--book-width);
+      height: var(--book-height);
+      transform-style: preserve-3d;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s ease;
+      cursor: pointer;
+    }
+
+    .book:hover {
+      transform: scale(1.1) translateY(-10px);
+      z-index: 10;
+    }
+
+    /* Pages intérieures */
+    .pages {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      border-radius: 2px 8px 8px 2px;
+      box-shadow: inset 5px 0 15px rgba(0,0,0,0.1);
+      z-index: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      /* Décalage du contenu vers la droite pour éviter qu'il soit caché par la couverture */
+      padding: 1.5rem 1rem 1.5rem 2.5rem; 
+      text-align: center;
+      border: 1px solid #e2e8f0;
+    }
+
+    .book-content {
+      color: #334155;
+      z-index: 2;
+      width: 100%;
+    }
+
+    .book-title-inner {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 0.8rem;
+      border-bottom: 1px solid #cbd5e1;
+      padding-bottom: 0.4rem;
+    }
+
+    .book-text-inner {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      font-style: italic;
+    }
+
+    /* Couverture */
+    .cover {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 4px 10px 10px 4px;
+      z-index: 5;
+      transform-origin: left;
+      transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      box-shadow: 5px 5px 20px rgba(0,0,0,0.5);
+      overflow: hidden;
+      backface-visibility: hidden;
+    }
+
+    .cover::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url("https://www.transparenttextures.com/patterns/leather.png");
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    .cover::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 12px;
+      background: linear-gradient(to right, rgba(0,0,0,0.4), rgba(255,255,255,0.2), rgba(0,0,0,0.4));
+      border-right: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .book:hover .cover {
+      transform: rotateY(var(--open-angle));
+    }
+
+    .cover-icon {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 1.5rem;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+      fill: white;
+    }
+
+    .cover-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: white;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .cover-subtitle {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.8);
+      margin-top: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .book-colors .cover { background: linear-gradient(135deg, #166534 0%, #14532d 100%); }
+
+    .spine {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 30px;
+      height: 100%;
+      background: #1e293b;
+      transform: rotateY(-90deg) translateX(-15px);
+      transform-origin: left;
+      z-index: 0;
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 1.8rem; }
+      .books-container { gap: 2.5rem; }
+      .book { width: 180px; height: 260px; }
+      .cover-icon { width: 45px; height: 45px; }
+      .cover-title { font-size: 1.1rem; }
+      .pages { padding: 1rem 0.5rem 1rem 1.5rem; }
+    }
+
+    .hint {
+      margin-top: 4rem;
+      font-size: 0.9rem;
+      color: #94a3b8;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>La Bibliothèque Mystique</h1>
+
+  <div class="books-container">
+
+    <div class="book book-colors">
+      <div class="spine"></div>
+      <div class="pages">
+        <div class="book-content">
+          <div class="book-title-inner">Équilibre</div>
+          <p class="book-text-inner">"Dans chaque grain de sable se cache l'histoire du monde."</p>
+        </div>
+      </div>
+      <div class="cover">
+        <svg class="cover-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
+        </svg>
+        <p class="cover-title">Nature</p>
+        <p class="cover-subtitle">Découvrir</p>
+      </div>
+    </div>
+
+
+  </div>
+
+  <p class="hint">Survolez un livre pour l'agrandir et l'ouvrir</p>
+
+  <script>
+    document.querySelectorAll('.book').forEach(book => {
+      book.addEventListener('touchstart', function(e) {
+        document.querySelectorAll('.book').forEach(b => {
+          if (b !== book) {
+            b.style.transform = '';
+            b.querySelector('.cover').style.transform = '';
+          }
+        });
+        
+        const cover = this.querySelector('.cover');
+        if (cover.style.transform === 'rotateY(-80deg)') {
+          this.style.transform = '';
+          cover.style.transform = '';
+        } else {
+          this.style.transform = 'scale(1.1) translateY(-10px)';
+          cover.style.transform = 'rotateY(-80deg)';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
