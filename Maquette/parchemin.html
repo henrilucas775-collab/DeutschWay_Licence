@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartes Allemand - Version Plume</title>
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Sevillana&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #1a1a1a;
+            background-image: radial-gradient(#2c2c2c 1px, transparent 1px);
+            background-size: 20px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            padding: 50px;
+            margin: 0;
+            font-family: 'MedievalSharp', cursive;
+        }
+
+        .card {
+            width: 500px;
+            height: 450px;
+            position: relative;
+            background-image: url(/public/sadow-removebg-preview.png) ;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            transition: transform 0.3s ease;
+            padding: 60px 150px 60px 150px;
+        }
+
+        .card:hover {
+            transform: scale(1.03) translateY(-5px);
+        }
+
+        .content {
+            height: 90%;
+            display: flex;
+            flex-direction: column;
+            color: #3d2416;
+            overflow: hidden;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin: 0 0 10px 0;
+            line-height: 1.1;
+            border-bottom: 1px solid rgba(61, 36, 22, 0.3);
+            width: 100%;
+            padding-top: 8px;
+            padding-bottom: 5px;
+            text-align: center;
+        }
+
+        p {
+            font-size: 0.95rem;
+            line-height: 2;
+            margin: 0;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            text-align: justify;
+            font-weight: 500;
+        }
+
+        .button-container {
+            
+            display: flex;
+            justify-content: flex-end;
+            width: 40%;
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 6px 20px;
+            background: #4a2c1d;
+            color: #e8d5b5;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: #2a1810;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Carte 1: NIVEAU ZÉRO -->
+    <div class="card">
+        <div class="content">
+            <h2>NIVEAU ZÉRO</h2>
+            <p>Suivez notre programme 
+            <br> structuré selon les niveaux
+            <br> du CECRL. Du débutant à 
+            <br>l'expert, progressez à votre 
+            <br>rythme avec des objectifs
+            <br> pédagogiques clairs.</p>
+            <div class="button-container">
+                <a href="#" class="btn">Ouvrir</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Carte 2: FONDATIONS -->
+    <div class="card">
+        <div class="content">
+            <h2>FONDATIONS</h2>
+            <p>Suivez notre programme 
+            <br> structuré selon les niveaux
+            <br> du CECRL. Du débutant à 
+            <br>l'expert, progressez à votre 
+            <br>rythme avec des objectifs
+            <br> pédagogiques clairs.</p>
+            <div class="button-container">
+                <a href="#" class="btn">Ouvrir</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Carte 3: IMMERSION -->
+    <div class="card">
+        <div class="content">
+            <h2>IMMERSION</h2>
+            <p>Objectif : être à l'aise en Allemagne dès votre arrivée. Codes culturels, vie professionnelle et rouages de la société allemande.</p>
+            <div class="button-container">
+                <a href="#" class="btn">Ouvrir</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

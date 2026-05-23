@@ -26,3 +26,18 @@ test('authenticated users can visit lab views', function (string $routeName) {
     'explorer' => 'lab.explorer',
     'progression' => 'lab.progression',
 ]);
+
+test('guests are redirected to login for parcours chapters view', function () {
+    $response = $this->get(route('lab.cours.chapitres', ['slug' => 'niveau-zero']));
+
+    $response->assertRedirect(route('login'));
+});
+
+test('authenticated users can visit parcours chapters view', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    $response = $this->get(route('lab.cours.chapitres', ['slug' => 'niveau-zero']));
+
+    $response->assertSuccessful();
+});

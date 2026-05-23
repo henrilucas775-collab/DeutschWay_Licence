@@ -309,7 +309,7 @@
                     <div class="book-content">
                         <div class="book-title-inner">Fondamentaux absolus</div>
                         <p class="book-text-inner">Alphabet, chiffres, couleurs et base du quotidien. Parfait pour les débutants complets.</p>
-                        <a href="{{ route('niveau-zero') }}" class="book-link-text" @click.stop wire:navigate>Decouvrir</a>
+                        <a href="{{ route('lab.cours.chapitres', ['slug' => 'niveau-zero']) }}" class="book-link-text" @click.stop wire:navigate>Decouvrir</a>
                     </div>
                 </div>
                 <div class="cover">
@@ -329,7 +329,7 @@
                     <div class="book-content">
                         <div class="book-title-inner">Niveau A1 → C2</div>
                         <p class="book-text-inner">Grammaire, conjugaison et vocabulaire essentiel pour construire des phrases complètes.</p>
-                        <a href="{{ route('fondations') }}" class="book-link-text" @click.stop wire:navigate>Decouvrir</a>
+                        <a href="{{ route('lab.cours.chapitres', ['slug' => 'fondations']) }}" class="book-link-text" @click.stop wire:navigate>Decouvrir</a>
                     </div>
                 </div>
                 <div class="cover">
@@ -349,7 +349,7 @@
                     <div class="book-content">
                         <div class="book-title-inner">Immersion complet</div>
                         <p class="book-text-inner">Conversations avancées, culture allemande et préparation à la vie en Allemagne.</p>
-                        <a href="{{ route('immersion') }}" class="book-link-text" @click.stop wire:navigate>Decouvrir</a>
+                        <a href="{{ route('lab.cours.chapitres', ['slug' => 'immersion']) }}" class="book-link-text" @click.stop wire:navigate>Decouvrir</a>
                     </div>
                 </div>
                 <div class="cover">

@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\ParcoursChapitres;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
@@ -13,6 +14,7 @@ Route::middleware(['auth'])->group(function () {
     Route::view('dashboard', 'app.dashboard')->name('dashboard');
     Route::view('lab/apprendre', 'app.apprendre')->name('lab.apprendre');
     Route::view('lab/cours', 'app.cours')->name('lab.cours');
+    Route::get('lab/cours/{slug}', ParcoursChapitres::class)->name('lab.cours.chapitres');
     Route::view('lab/explorer', 'app.explorer')->name('lab.explorer');
     Route::view('lab/progression', 'app.progression')->name('lab.progression');
 });
