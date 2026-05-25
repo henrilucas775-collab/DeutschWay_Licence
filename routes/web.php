@@ -13,7 +13,14 @@ Route::view('/immersion', 'pages.immersion')->name('immersion');
 Route::middleware(['auth'])->group(function () {
     Route::view('dashboard', 'app.dashboard')->name('dashboard');
     Route::view('lab/apprendre', 'app.apprendre')->name('lab.apprendre');
-    Route::view('lab/cours', 'app.cours')->name('lab.cours');
+    Route::get('lab/apprendre/{chapitre}', function ($chapitre) {
+        return view('app.apprendre', ['chapitreSlug' => $chapitre]);
+    })->name('lab.apprendre.show');
+    Route::get('lab/cours', function () {
+        return view('app.cours', [
+            'parcoursList' => ParcoursChapitres::catalog(),
+        ]);
+    })->name('lab.cours');
     Route::get('lab/cours/{slug}', ParcoursChapitres::class)->name('lab.cours.chapitres');
     Route::view('lab/explorer', 'app.explorer')->name('lab.explorer');
     Route::view('lab/progression', 'app.progression')->name('lab.progression');

@@ -5,107 +5,30 @@
 
       /* Layout Styles */
       .parcours-chapitres-container {
-        padding: 2rem 1rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
         width: 100%;
         min-height: 100vh;
-      }
-
-      /* Parchemin Section */
-      .parchemin-wrapper {
-        width: 100%;
-        max-width: 650px;
-        display: flex;
-        justify-content: center;
-        margin-bottom: 3.5rem;
-      }
-
-      .parchemin-card {
-        width: 100%;
-        aspect-ratio: 500 / 380;
-        position: relative;
-        background-image: url('{{ asset("sadow-removebg-preview.png") }}');
-        background-size: 100% 100%;
-        background-repeat: no-repeat;
-        background-position: center;
         display: flex;
         flex-direction: column;
-        box-sizing: border-box;
-        transition: transform 0.3s ease;
-        padding: 10% 20% 11% 20%; /* Proportional padding for responsiveness */
-      }
-
-      .parchemin-card:hover {
-        transform: scale(1.02) translateY(-3px);
-      }
-
-      .parchemin-content {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        color: #3d2416;
-        overflow-y: auto;
-        scrollbar-width: none; /* Hide scrollbars */
-      }
-      .parchemin-content::-webkit-scrollbar {
-        display: none;
-      }
-
-      .parchemin-title {
-        font-family: 'MedievalSharp', cursive;
-        font-size: 1.6rem;
-        margin: 0 0 10px 0;
-        line-height: 1.1;
-        border-bottom: 2px solid rgba(61, 36, 22, 0.25);
-        width: 100%;
-        padding-bottom: 6px;
-        text-align: center;
-        text-transform: uppercase;
-        color: #2b1810;
-        letter-spacing: 2px;
-      }
-
-      .parchemin-text {
-        font-family: 'MedievalSharp', cursive;
-        font-size: 0.95rem;
-        line-height: 1.8;
-        margin: 0;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        text-align: center;
-        font-weight: 500;
-        color: #4a2c1d;
-      }
-
-      .parchemin-meta {
-        font-family: 'Sevillana', cursive;
-        font-size: 1.4rem;
-        color: #854d0e;
-        margin-top: 5px;
-        text-align: center;
+        align-items: stretch;
       }
 
       /* 3D Library Shelf Section */
       .lab-books-section {
-        background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+        background: radial-gradient(circle at center, #e6e6e6ff 0%, #e7e7e7ff 100%);
         border-radius: 24px;
-        padding: 5rem 2rem;
-        box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(0, 0, 0, 0.15);
+        padding: 5rem 24px;
+        box-shadow: inset 0 0 50px var(--lab-accent), 0 10px 30px rgba(0, 0, 0, 0.15);
         border: 1px solid rgba(255, 255, 255, 0.05);
         position: relative;
         overflow: hidden;
         width: 100%;
-        max-width: 1200px;
+        margin-top: 1.5rem;
         display: flex;
         flex-direction: column;
         align-items: center;
-        
+
         /* Model parameters */
-        --bg-color: #0f172a;
+        --bg-color: #e7e7e7;
         --book-width: 220px;
         --book-height: 320px;
         --transition-speed: 0.6s;
@@ -131,7 +54,7 @@
         margin-bottom: 3.5rem;
         text-align: center;
         letter-spacing: 0.2rem;
-        color: var(--gold);
+        color: var(--lab-accent);
         text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
         z-index: 1;
       }
@@ -143,8 +66,9 @@
         align-items: center;
         gap: 4rem;
         width: 100%;
-        max-width: 1100px;
+        max-width: 100%;
         margin: 0 auto;
+        padding: 0;
         z-index: 1;
       }
 
@@ -328,16 +252,6 @@
       }
 
       @media (max-width: 768px) {
-        .parchemin-card {
-          padding: 8% 15% 9% 15%;
-        }
-        .parchemin-title {
-          font-size: 1.3rem;
-        }
-        .parchemin-text {
-          font-size: 0.8rem;
-          line-height: 1.6;
-        }
         .lab-books-section {
           padding: 3rem 1rem;
         }
@@ -362,20 +276,12 @@
     </style>
 
     <div class="parcours-chapitres-container">
-        <!-- Parchemin Header Card representing the general Course -->
-        <div class="parchemin-wrapper">
-            <div class="parchemin-card">
-                <div class="parchemin-content">
-                    <h2 class="parchemin-title">{{ $parcours['titre'] }}</h2>
-                    <div class="parchemin-text">
-                        {{ $parcours['description'] }}
-                        <div class="parchemin-meta">
-                            Difficulté : {{ $parcours['difficulte'] }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+        <div class="lab-section-header">
+            <div class="lab-section-eyebrow">Section active</div>
+            <div class="lab-section-title">Chapitres</div>
+        </div>  
+
 
         <!-- Dynamic Bookshelf of Chapters -->
         <div class="lab-books-section">
@@ -400,7 +306,7 @@
                                 
                                 <!-- Anchor action link to study room -->
                                 <a 
-                                  href="{{ route('lab.apprendre') }}?chapitre={{ $chapitre['slug'] }}" 
+                                  href="{{ route('lab.apprendre.show', ['chapitre' => $chapitre['slug']]) }}" 
                                   class="book-link-text" 
                                   @click.stop 
                                   wire:navigate

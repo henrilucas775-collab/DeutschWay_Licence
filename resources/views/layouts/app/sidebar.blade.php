@@ -80,7 +80,7 @@
                         </li>
 
                         <li>
-                            <a href="{{ route('lab.cours') }}" class="lab-nav-item {{ request()->routeIs('lab.cours') ? 'active' : '' }}" wire:navigate @click="mobileNavOpen = false">
+                            <a href="{{ route('lab.cours') }}" class="lab-nav-item {{ request()->routeIs('lab.cours*') ? 'active' : '' }}" wire:navigate @click="mobileNavOpen = false">
                                 <svg class="lab-nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
                                     <rect x="3" y="4" width="14" height="12" rx="1.5" />
                                     <path d="M7 8H13M7 11H11" />
@@ -90,7 +90,7 @@
                         </li>
 
                         <li>
-                            <a href="{{ route('lab.apprendre') }}" class="lab-nav-item {{ request()->routeIs('lab.apprendre') ? 'active' : '' }}" wire:navigate @click="mobileNavOpen = false">
+                            <a href="{{ route('lab.apprendre') }}" class="lab-nav-item {{ request()->routeIs('lab.apprendre*') ? 'active' : '' }}" wire:navigate @click="mobileNavOpen = false">
                                 <svg class="lab-nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
                                     <path d="M3 6L10 2L17 6L10 10L3 6Z" />
                                     <path d="M3 10L10 14L17 10" />
@@ -192,15 +192,15 @@
                     </div>
                     <div class="lab-topbar-actions" style="display: flex; gap: 12px;">
                         <a href="{{ route('home') }}" class="btn-ghost lab-topbar-site-link" style="text-decoration: none; display: flex; align-items: center; gap: 8px; padding: 8px 16px; border: 1px solid var(--lab-glass-border); border-radius: 40px; background: white; color: var(--lab-charcoal-mid); font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s;" wire:navigate @click="mobileNavOpen = false">
-                            <svg width="12" height="12" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                                <path d="M10 3L5 8l5 5"/>
+                            </svg> 
                             Retour au site
                         </a>
                     </div>
                 </header>
 
-                <div class="lab-content">
+                <div class="lab-content" style="padding-right: 36px; padding-left: 36px;">
                     {{ $slot }}
                 </div>
             </main>

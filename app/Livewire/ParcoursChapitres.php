@@ -62,14 +62,6 @@ class ParcoursChapitres extends Component
                     'icone' => 'quotidien',
                     'progression' => 0,
                 ],
-                [
-                    'titre' => 'Exercices Finaux',
-                    'slug' => 'exercices',
-                    'description' => 'Parcours d\'évaluation complet en 3 étapes : prononciation, dictée et quiz final.',
-                    'couleur_theme' => 'linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%)',
-                    'icone' => 'quiz',
-                    'progression' => 0,
-                ],
             ],
         ],
         'fondations' => [
@@ -117,6 +109,34 @@ class ParcoursChapitres extends Component
             ],
         ],
     ];
+
+    /**
+     * @return list<array{titre: string, slug: string, description: string, difficulte: string, disponible: bool}>
+     */
+    public static function catalog(): array
+    {
+        $parcours = [];
+
+        foreach (self::$dataset as $item) {
+            $parcours[] = [
+                'titre' => $item['titre'],
+                'slug' => $item['slug'],
+                'description' => $item['description'],
+                'difficulte' => $item['difficulte'],
+                'disponible' => true,
+            ];
+        }
+
+        $parcours[] = [
+            'titre' => 'Avancé',
+            'slug' => 'avance',
+            'description' => 'Maîtrise complète de l\'allemand, littérature, argot et nuances professionnelles.',
+            'difficulte' => 'Expert (C1 -> C2)',
+            'disponible' => false,
+        ];
+
+        return $parcours;
+    }
 
     public function mount(string $slug): void
     {

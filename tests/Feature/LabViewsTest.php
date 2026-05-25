@@ -27,6 +27,21 @@ test('authenticated users can visit lab views', function (string $routeName) {
     'progression' => 'lab.progression',
 ]);
 
+test('cours page displays parchemins for each parcours', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    $response = $this->get(route('lab.cours'));
+
+    $response->assertSuccessful();
+    $response->assertSee('Choisissez votre parcours DeutschWay', false);
+    $response->assertSee('Niveau Zéro', false);
+    $response->assertSee('Fondations', false);
+    $response->assertSee('Immersion', false);
+    $response->assertSee('Avancé', false);
+    $response->assertSee('parchemin-card', false);
+});
+
 test('guests are redirected to login for parcours chapters view', function () {
     $response = $this->get(route('lab.cours.chapitres', ['slug' => 'niveau-zero']));
 
