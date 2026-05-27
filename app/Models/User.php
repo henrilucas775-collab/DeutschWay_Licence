@@ -43,4 +43,18 @@ class User extends Authenticatable
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
     }
+
+    public function chapitres()
+    {
+        return $this->belongsToMany(Chapitre::class, 'chapitre_user')
+            ->withPivot('statut', 'score')
+            ->withTimestamps();
+    }
+
+    public function lecons()
+    {
+        return $this->belongsToMany(Lecon::class, 'lecon_user')
+            ->withPivot('est_ecoute', 'date_ecoute')
+            ->withTimestamps();
+    }
 }

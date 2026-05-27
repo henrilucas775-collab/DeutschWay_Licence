@@ -100,11 +100,11 @@
 
                                 <flux:menu.separator />
 
-                                <flux:menu.item icon="layout-grid" :href="route('dashboard')" wire:navigate style="padding: 5px;">
+                                <flux:menu.item icon="layout-grid" :href="route('dashboard')" wire:navigate style="padding: 5px 12px 5px 12px;">
                                     Accède à mon Lab
                                 </flux:menu.item>
 
-                                <flux:menu.item icon="cog" :href="route('profile.edit')" wire:navigate style="padding: 5px;">
+                                <flux:menu.item icon="cog" :href="route('profile.edit')" wire:navigate style="padding: 0px 12px 5px 12px;">
                                     Paramètres
                                 </flux:menu.item>
 
@@ -112,7 +112,7 @@
 
                                 <form method="POST" action="{{ route('logout') }}" class="w-full">
                                     @csrf
-                                    <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full" style="padding: 5px;">
+                                    <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full" style="padding: 5px 12px 5px 12px;">
                                         Déconnecté
                                     </flux:menu.item>
                                 </form>

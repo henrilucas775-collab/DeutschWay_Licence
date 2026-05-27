@@ -256,7 +256,7 @@
                         x-data="{ playing: false }"
                         @click="
                             playing = true; 
-                            $wire.markAsHeard({{ $index }});
+                            $wire.markAsHeard({{ $item['id'] }});
                             // Temporaire: simulation audio ou appel à une vraie API text-to-speech
                             setTimeout(() => playing = false, 1000);
                         "
@@ -275,7 +275,7 @@
                         x-data="{ playing: false }"
                         @click="
                             playing = true; 
-                            $wire.markAsHeard({{ $index }});
+                            $wire.markAsHeard({{ $item['id'] }});
                             setTimeout(() => playing = false, 1000);
                         "
                         :class="{ 'is-playing': playing }"
@@ -297,7 +297,7 @@
                         x-data="{ playing: false }"
                         @click="
                             playing = true; 
-                            $wire.markAsHeard({{ $index }});
+                            $wire.markAsHeard({{ $item['id'] }});
                             setTimeout(() => playing = false, 1000);
                         "
                         :class="{ 'is-playing': playing }"
