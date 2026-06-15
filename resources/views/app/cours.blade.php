@@ -164,6 +164,8 @@
         font-weight: 500;
         color: #4a2c1d;
         padding: 0.15rem 0;
+        padding-left: 12px;
+        padding-right : 12px;
       }
 
       .parchemin-description::-webkit-scrollbar {
@@ -190,12 +192,14 @@
 
       .parchemin-cta {
         font-family: 'Poppins', sans-serif;
-        font-size: 0.68rem;
+        font-size: 0.90rem;
         font-weight: 600;
-        color: #6b4423;
+        color: #974705ff;
         text-transform: uppercase;
         letter-spacing: 1.2px;
         margin: 0;
+        padding-right: 65px;
+        padding-bottom: 7px;
       }
 
       .hint {
@@ -271,7 +275,7 @@
                                 <h2 class="parchemin-title">{{ $parcours['titre'] }}</h2>
                                 <p class="parchemin-description">{{ $parcours['description'] }}</p>
                                 <div class="parchemin-footer">
-                                    <span class="parchemin-cta">Bientôt disponible</span>
+                                    <span class="parchemin-cta">Bientôt</span>
                                 </div>
                             </div>
                         </div>
@@ -299,3 +303,4 @@
         </div>
     </div>
 </x-layouts::app>
+ 

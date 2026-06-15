@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cartes de vocabulaire allemand</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/tabler-icons.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --card-w: 180px;
+      --card-h: 240px;
+      --primary: #185FA5;
+      --primary-light: #E6F1FB;
+      --success: #1D9E75;
+      --success-light: #E1F5EE;
+      --text-primary: #1a1a1a;
+      --text-secondary: #6b7280;
+      --border-color: #e5e7eb;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f9fafb;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      padding: 2rem 0;
+    }
+
+    .fc-wrap {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .fc-header {
+      margin-bottom: 2rem;
+      text-align: center;
+      animation: slideDown 0.6s ease-out;
+    }
+
+    .fc-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .fc-subtitle {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .fc-description {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* Layout des contrôles - filtres à gauche et recherche à côté */
+    .fc-controls {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .fc-filter {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .fc-filter-btn {
+      padding: 0.5rem 1rem;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1.5px solid var(--border-color);
+      background: var(--bg-primary);
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: var(--transition);
+    }
+
+    .fc-filter-btn:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .fc-filter-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* Barre de recherche */
+    .fc-search-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--bg-primary);
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      flex: 1;
+      max-width: 400px;
+    }
+
+    .fc-search-bar:focus-within {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-md);
+    }
+
+    .fc-search-bar i {
+      color: var(--text-secondary);
+      font-size: 18px;
+    }
+
+    .fc-search-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text-primary);
+    }
+
+    .fc-search-input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    .fc-container {
+      margin-bottom: 2rem;
+    }
+
+    /* Grille 7 colonnes */
+    .fc-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 15px;
+      padding: 1rem 0;
+    }
+
+    .fc-card {
+      width: 100%;
+      height: var(--card-h);
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+
+    .fc-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary);
+    }
+
+    .fc-img-container {
+      position: relative;
+      width: 100%;
+      height: 110px;
+      overflow: hidden;
+      background: var(--bg-secondary);
+    }
+
+    .fc-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .fc-body {
+      padding: 10px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .fc-article {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 1px 4px;
+      border-radius: 3px;
+      width: fit-content;
+    }
+
+    .fc-word-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 5px;
+    }
+
+    .fc-word {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .fc-controls-buttons {
+      display: flex;
+      gap: 4px;
+    }
+
+    .fc-listen, .fc-record {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--success);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      background: var(--success-light);
+    }
+
+    .fc-record {
+      background: #FEE2E2;
+      border-color: #DC2626;
+    }
+
+    .fc-listen i, .fc-record i {
+      font-size: 14px;
+      color: var(--success);
+    }
+
+    .fc-record i { color: #DC2626; }
+
+    .fc-fr {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .fc-category {
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--primary);
+      background: var(--primary-light);
+      border-radius: 4px;
+      padding: 2px 6px;
+      margin-top: auto;
+      width: fit-content;
+    }
+
+    /* Pagination */
+    .fc-pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-top: 2rem;
+    }
+
+    .fc-page-btn {
+      min-width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-color);
+      background: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .fc-page-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .fc-page-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .fc-page-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .fc-score {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+    .fc-score.low { background: #ef4444; }
+    .fc-score.medium { background: #f59e0b; }
+    .fc-score.high { background: #10b981; }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 1200px) { .fc-grid { grid-template-columns: repeat(5, 1fr); } }
+    @media (max-width: 900px) { .fc-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 600px) { .fc-grid { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</head>
+<body>
+  <div class="fc-wrap">
+    <div class="fc-header">
+      <p class="fc-title">Vocabulaire allemand</p>
+      <h1 class="fc-subtitle">Apprenez avec des images et du son</h1>
+      <p class="fc-description">Explorez le vocabulaire allemand à travers des cartes interactives</p>
+    </div>
+
+    <div class="fc-controls">
+      <div class="fc-filter">
+        <button class="fc-filter-btn active" onclick="filterCards('all')">Tous</button>
+        <button class="fc-filter-btn" onclick="filterCards('Nourriture')">Nourriture</button>
+        <button class="fc-filter-btn" onclick="filterCards('Animaux')">Animaux</button>
+        <button class="fc-filter-btn" onclick="filterCards('Nature')">Nature</button>
+        <button class="fc-filter-btn" onclick="filterCards('Habitat')">Habitat</button>
+        <button class="fc-filter-btn" onclick="filterCards('Vêtements')">Vêtements</button>
+        <button class="fc-filter-btn" onclick="filterCards('Transport')">Transport</button>
+        <button class="fc-filter-btn" onclick="filterCards('Objets')">Objets</button>
+      </div>
+      <div class="fc-search-bar">
+        <i class="ti ti-search"></i>
+        <input 
+          type="text" 
+          class="fc-search-input" 
+          id="searchInput" 
+          placeholder="Rechercher..."
+          onkeyup="searchCards()"
+        >
+      </div>
+    </div>
+
+    <div class="fc-container">
+      <div class="fc-grid" id="cardGrid">
+        <!-- Les cartes seront injectées ici par JavaScript -->
+      </div>
+    </div>
+
+    <div class="fc-pagination" id="pagination">
+      <!-- La pagination sera injectée ici -->
+    </div>
+  </div>
+
+  <script>
+    // Données des cartes avec nouvelles entrées
+    const allCardsData = [
+      { category: "Nourriture", article: "der", word: "Apfel", fr: "la pomme", img: "https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?w=400&q=80" },
+      { category: "Animaux", article: "der", word: "Fisch", fr: "le poisson", img: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&q=80" },
+      { category: "Nature", article: "der", word: "Berg", fr: "la montagne", img: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=400&q=80" },
+      { category: "Nature", article: "der", word: "Schnee", fr: "la neige", img: "https://images.unsplash.com/photo-1516912481808-3406841bd33c?w=400&q=80" },
+      { category: "Animaux", article: "der", word: "Hund", fr: "le chien", img: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&q=80" },
+      { category: "Habitat", article: "das", word: "Haus", fr: "la maison", img: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400&q=80" },
+      { category: "Nature", article: "das", word: "Meer", fr: "la mer", img: "https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?w=400&q=80" },
+      { category: "Nourriture", article: "das", word: "Brot", fr: "le pain", img: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&q=80" },
+      { category: "Animaux", article: "die", word: "Katze", fr: "le chat", img: "https://images.unsplash.com/photo-1536599018102-9f803c140fc1?w=400&q=80" },
+      { category: "Nature", article: "die", word: "Blume", fr: "la fleur", img: "https://images.unsplash.com/photo-1563822249366-3efb23b8e0c9?w=400&q=80" },
+      
+      // Nouvelles cartes - Vêtements
+      { category: "Vêtements", article: "das", word: "Hemd", fr: "la chemise", img: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&q=80" },
+      { category: "Vêtements", article: "die", word: "Hose", fr: "le pantalon", img: "https://images.unsplash.com/photo-1542272604-787c62d465d1?w=400&q=80" },
+      { category: "Vêtements", article: "der", word: "Rock", fr: "la jupe", img: "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=400&q=80" },
+      { category: "Vêtements", article: "der", word: "Schuh", fr: "la chaussure", img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80" },
+      { category: "Vêtements", article: "der", word: "Hut", fr: "le chapeau", img: "https://images.unsplash.com/photo-1533021773390-260eda7ab6cb?w=400&q=80" },
+      
+      // Nouvelles cartes - Transport
+      { category: "Transport", article: "das", word: "Auto", fr: "la voiture", img: "https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=400&q=80" },
+      { category: "Transport", article: "das", word: "Fahrrad", fr: "le vélo", img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80" },
+      { category: "Transport", article: "der", word: "Zug", fr: "le train", img: "https://images.unsplash.com/photo-1494976388531-d1058494cdd0?w=400&q=80" },
+      { category: "Transport", article: "das", word: "Flugzeug", fr: "l'avion", img: "https://images.unsplash.com/photo-1540962351504-b8176674ae4e?w=400&q=80" },
+      { category: "Transport", article: "das", word: "Schiff", fr: "le bateau", img: "https://images.unsplash.com/photo-1544551763-92ab472cad5d?w=400&q=80" },
+        { category: "Transport", article: "das", word: "Auto", fr: "la voiture", img: "https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=400&q=80" },
+      { category: "Transport", article: "das", word: "Fahrrad", fr: "le vélo", img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80" },
+
+      // Nouvelles cartes - Objets
+      { category: "Objets", article: "der", word: "Stuhl", fr: "la chaise", img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80" },
+      { category: "Objets", article: "der", word: "Tisch", fr: "la table", img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80" },
+      { category: "Objets", article: "das", word: "Bett", fr: "le lit", img: "https://images.unsplash.com/photo-1540932239986-310128078ceb?w=400&q=80" },
+      { category: "Objets", article: "die", word: "Lampe", fr: "la lampe", img: "https://images.unsplash.com/photo-1565636192335-14c46fa1120d?w=400&q=80" },
+      { category: "Objets", article: "die", word: "Tür", fr: "la porte", img: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=400&q=80" },
+      { category: "Objets", article: "das", word: "Fenster", fr: "la fenêtre", img: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=400&q=80" },
+      { category: "Objets", article: "das", word: "Buch", fr: "le livre", img: "https://images.unsplash.com/photo-1507842217343-583f20270319?w=400&q=80" },
+      { category: "Objets", article: "der", word: "Stift", fr: "le stylo", img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&q=80" },
+
+      // Nouvelles cartes - Nourriture supplémentaires
+      { category: "Nourriture", article: "die", word: "Milch", fr: "le lait", img: "https://images.unsplash.com/photo-1563636619-e7db3814b5df?w=400&q=80" },
+      { category: "Nourriture", article: "das", word: "Ei", fr: "l'œuf", img: "https://images.unsplash.com/photo-1569718212e3-3a52a5848def?w=400&q=80" },
+      { category: "Nourriture", article: "das", word: "Käse", fr: "le fromage", img: "https://images.unsplash.com/photo-1452899150238-b4146b39b56e?w=400&q=80" },
+      { category: "Nourriture", article: "die", word: "Wurst", fr: "la saucisse", img: "https://images.unsplash.com/photo-1555939594-58d7cb561c1a?w=400&q=80" },
+      
+      // Nouvelles cartes - Animaux supplémentaires
+      { category: "Animaux", article: "die", word: "Vogel", fr: "l'oiseau", img: "https://images.unsplash.com/photo-1444464666175-1642a4d30d16?w=400&q=80" },
+      { category: "Animaux", article: "die", word: "Schlange", fr: "le serpent", img: "https://images.unsplash.com/photo-1518531933037-91b2f5f9cc0f?w=400&q=80" },
+      { category: "Animaux", article: "das", word: "Pferd", fr: "le cheval", img: "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=400&q=80" },
+      { category: "Animaux", article: "das", word: "Schwein", fr: "le cochon", img: "https://images.unsplash.com/photo-1516387938669-e51de1d152e9?w=400&q=80" },
+    ];
+
+    let displayCards = [...allCardsData];
+    
+    // Paramètres de pagination
+    const COLUMNS = 7;
+    const ROWS = 10;
+    const CARDS_PER_PAGE = COLUMNS * ROWS; // 70 cartes par page
+    let currentPage = 1;
+    let currentCategory = 'all';
+    let learnedCards = new Set();
+    let searchQuery = '';
+
+    function renderGrid() {
+      const grid = document.getElementById('cardGrid');
+      grid.innerHTML = '';
+      
+      let filtered = displayCards;
+      
+      // Filtrer par catégorie
+      if (currentCategory !== 'all') {
+        filtered = filtered.filter(c => c.category === currentCategory);
+      }
+      
+      // Filtrer par recherche
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase();
+        filtered = filtered.filter(c => 
+          c.word.toLowerCase().includes(query) || 
+          c.fr.toLowerCase().includes(query)
+        );
+      }
+      
+      const totalPages = Math.ceil(filtered.length / CARDS_PER_PAGE) || 1;
+      if (currentPage > totalPages) currentPage = totalPages;
+
+      const start = (currentPage - 1) * CARDS_PER_PAGE;
+      const end = start + CARDS_PER_PAGE;
+      const pageItems = filtered.slice(start, end);
+
+      pageItems.forEach(data => {
+        const card = document.createElement('div');
+        card.className = 'fc-card';
+        card.innerHTML = `
+          <div class="fc-img-container">
+            <img class="fc-img" src="${data.img}" alt="${data.word}" loading="lazy">
+          </div>
+          <div class="fc-body">
+            <p class="fc-article">${data.article}</p>
+            <div class="fc-word-row">
+              <span class="fc-word">${data.word}</span>
+              <div class="fc-controls-buttons">
+                <button class="fc-listen" onclick="speak('${data.article} ${data.word}', this)">
+                  <i class="ti ti-volume-2"></i>
+                </button>
+                <button class="fc-record" onclick="startRecording(this)">
+                  <i class="ti ti-microphone"></i>
+                </button>
+              </div>
+            </div>
+            <p class="fc-fr">${data.fr}</p>
+            <span class="fc-category">${data.category}</span>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      renderPagination(totalPages);
+    }
+
+    function renderPagination(totalPages) {
+      const nav = document.getElementById('pagination');
+      nav.innerHTML = '';
+
+      if (totalPages <= 1) return;
+
+      // Bouton Précédent
+      const prev = document.createElement('button');
+      prev.className = 'fc-page-btn';
+      prev.innerHTML = '<i class="ti ti-chevron-left"></i>';
+      prev.disabled = currentPage === 1;
+      prev.onclick = () => { currentPage--; renderGrid(); };
+      nav.appendChild(prev);
+
+      // Pages
+      for (let i = 1; i <= totalPages; i++) {
+        if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+          const btn = document.createElement('button');
+          btn.className = `fc-page-btn ${i === currentPage ? 'active' : ''}`;
+          btn.textContent = i;
+          btn.onclick = () => { currentPage = i; renderGrid(); };
+          nav.appendChild(btn);
+        } else if (i === currentPage - 2 || i === currentPage + 2) {
+          const dots = document.createElement('span');
+          dots.textContent = '...';
+          nav.appendChild(dots);
+        }
+      }
+
+      // Bouton Suivant
+      const next = document.createElement('button');
+      next.className = 'fc-page-btn';
+      next.innerHTML = '<i class="ti ti-chevron-right"></i>';
+      next.disabled = currentPage === totalPages;
+      next.onclick = () => { currentPage++; renderGrid(); };
+      nav.appendChild(next);
+    }
+
+    function filterCards(cat) {
+      currentCategory = cat;
+      currentPage = 1;
+      document.querySelectorAll('.fc-filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent === (cat === 'all' ? 'Tous' : cat));
+      });
+      renderGrid();
+    }
+
+    function searchCards() {
+      searchQuery = document.getElementById('searchInput').value;
+      currentPage = 1;
+      renderGrid();
+    }
+
+    // Fonctions Audio
+    function speak(text, btn) {
+      if (!window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'de-DE';
+      utter.rate = 0.85;
+      
+      btn.innerHTML = '<i class="ti ti-volume-3"></i>';
+      utter.onend = () => {
+        btn.innerHTML = '<i class="ti ti-volume-2"></i>';
+        const card = btn.closest('.fc-card');
+        if (card) learnedCards.add(card);
+      };
+      window.speechSynthesis.speak(utter);
+    }
+
+    async function startRecording(btn) {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const mediaRecorder = new MediaRecorder(stream);
+        btn.style.animation = 'pulse-red 1.5s infinite';
+        
+        setTimeout(() => {
+          mediaRecorder.stop();
+          stream.getTracks().forEach(t => t.stop());
+          btn.style.animation = '';
+          displayScore(btn, Math.floor(Math.random() * 30) + 70);
+        }, 2000);
+        
+        mediaRecorder.start();
+      } catch (e) { alert("Microphone non accessible"); }
+    }
+
+    function displayScore(btn, score) {
+      let s = btn.nextElementSibling;
+      if (!s || !s.classList.contains('fc-score')) {
+        s = document.createElement('div');
+        s.className = 'fc-score';
+        btn.parentNode.insertBefore(s, btn.nextSibling);
+      }
+      s.textContent = score + '%';
+      s.className = 'fc-score ' + (score < 75 ? 'low' : score < 85 ? 'medium' : 'high');
+    }
+
+    document.addEventListener('DOMContentLoaded', renderGrid);
+  </script>
+</body>
+</html>

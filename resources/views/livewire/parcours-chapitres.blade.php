@@ -273,9 +273,32 @@
           padding: 1rem 0.5rem 1rem 1.5rem;
         }
       }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'DM Mono', monospace;
+            font-size: 12px;
+            color: var(--charcoal-light, #64748b);
+            cursor: pointer;
+            background: none;
+            border: none;
+            margin-bottom: 24px;
+            padding: 0;
+            transition: color 0.15s;
+            text-decoration: none;
+        }
+        .back-btn:hover { color: var(--ink, #0f172a); }
     </style>
 
     <div class="parcours-chapitres-container">
+
+        <a href="{{ route('lab.cours') }}" class="back-btn" wire:navigate>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <path d="M10 3L5 8l5 5"/>
+            </svg>
+            Cours
+        </a>
 
         <div class="lab-section-header">
             <div class="lab-section-eyebrow">Section active</div>

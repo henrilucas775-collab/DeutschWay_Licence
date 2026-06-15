@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sein & Haben — Vocabulaire allemand</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  :root {
+    --sein:    #6D28D9;
+    --sein-lt: #EDE9FE;
+    --sein-md: #C4B5FD;
+    --sein-brd:#A78BFA;
+    --haben:   #BE185D;
+    --haben-lt:#FCE7F3;
+    --haben-md:#F9A8D4;
+    --haben-brd:#F472B6;
+    --ink:     #1C1917;
+    --ink2:    #57534E;
+    --ink3:    #A8A29E;
+    --paper:   #FDFAF7;
+    --paper2:  #F5F0EB;
+    --border:  #E7E0D8;
+    --radius:  12px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 11px; font-weight: 600; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--ink3);
+    padding: 28px 24px 12px;
+  }
+  .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  /* ── CONJUGAISON TABLES ── */
+  .cj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 0 24px; }
+  @media (max-width: 560px) { .cj-grid { grid-template-columns: 1fr; } }
+
+  .cj-card { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
+
+  .cj-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 14px;
+  }
+  .cj-head-verb { font-family: 'Lora', serif; font-size: 20px; font-weight: 700; }
+  .cj-head-fr   { font-size: 12px; font-weight: 500; opacity: .65; flex: 1; }
+  .cj-head-btn  {
+    width: 30px; height: 30px; border-radius: 50%; border: none;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 13px; transition: transform .12s, opacity .15s;
+    flex-shrink: 0;
+  }
+  .cj-head-btn:hover { opacity: .8; } .cj-head-btn:active { transform: scale(.9); }
+
+  .sein-theme .cj-head  { background: var(--sein-lt); color: var(--sein); }
+  .sein-theme .cj-head-btn { background: var(--sein); color: #fff; }
+  .haben-theme .cj-head { background: var(--haben-lt); color: var(--haben); }
+  .haben-theme .cj-head-btn { background: var(--haben); color: #fff; }
+
+  .cj-table { width: 100%; border-collapse: collapse; }
+  .cj-table thead th {
+    font-size: 10px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+    color: var(--ink3); background: var(--paper2); padding: 7px 12px;
+    border-bottom: 1px solid var(--border); text-align: left;
+  }
+  .cj-row { cursor: pointer; transition: background .12s; }
+  .cj-row:not(:last-child) td { border-bottom: 1px solid var(--border); }
+  .cj-row td { padding: 9px 12px; vertical-align: middle; }
+  .cj-pro-cell { width: 42%; border-right: 1px solid var(--border); }
+  .cj-pro    { font-size: 13px; color: var(--ink2); }
+  .cj-pro-fr { font-size: 11px; color: var(--ink3); margin-top: 1px; }
+  .cj-form   { font-family: 'Lora', serif; font-size: 15px; font-weight: 600; }
+  .sein-theme  .cj-form       { color: var(--sein);  }
+  .sein-theme  .cj-row:hover  { background: #F5F1FF; }
+  .sein-theme  .cj-row.lit    { background: var(--sein-lt); }
+  .haben-theme .cj-form       { color: var(--haben); }
+  .haben-theme .cj-row:hover  { background: #FDF2F8; }
+  .haben-theme .cj-row.lit    { background: var(--haben-lt); }
+  .cj-play-td { width: 32px; text-align: right; }
+  .mini-play {
+    width: 24px; height: 24px; border-radius: 50%; border: none;
+    background: transparent; cursor: pointer; color: var(--ink3);
+    display: flex; align-items: center; justify-content: center;
+    transition: color .15s, transform .1s; padding: 0; margin-left: auto;
+    font-size: 15px;
+  }
+  .sein-theme  .mini-play:hover, .sein-theme  .mini-play.playing { color: var(--sein);  }
+  .haben-theme .mini-play:hover, .haben-theme .mini-play.playing { color: var(--haben); }
+  .mini-play:active { transform: scale(.88); }
+
+  /* ── TRANSITION ── */
+  .transition-block {
+    margin: 28px 24px 0;
+    background: var(--paper2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--sein);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 16px 18px;
+  }
+  .transition-block p {
+    font-family: 'Lora', serif; font-size: 14px; font-style: italic;
+    color: var(--ink2); line-height: 1.7;
+  }
+  .transition-block strong { font-style: normal; color: var(--ink); }
+
+  /* ── PHRASE TABLE ── */
+  .pl-section-lbl {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 11px; font-weight: 600; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--ink3);
+    padding: 6px 0 0;
+  }
+  .pl-section-lbl::before { content:''; flex:1; height:1px; background:var(--border); }
+  .pl-section-lbl::after  { content:''; flex:1; height:1px; background:var(--border); }
+
+  .pl-outer { padding: 0 24px; }
+  .pl-verb-block { margin-bottom: 24px; }
+  .pl-verb-title {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 14px 10px;
+    border-radius: var(--radius) var(--radius) 0 0;
+    border: 1px solid var(--border); border-bottom: none;
+  }
+  .pl-verb-title .vt-de { font-family: 'Lora', serif; font-size: 17px; font-weight: 700; }
+  .pl-verb-title .vt-fr { font-size: 12px; font-weight: 500; opacity: .65; flex:1; }
+  .pl-verb-title .vt-btn {
+    width: 28px; height: 28px; border-radius: 50%; border: none;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; transition: transform .12s, opacity .15s;
+  }
+  .pl-verb-title .vt-btn:hover { opacity: .8; } .pl-verb-title .vt-btn:active { transform: scale(.9); }
+  .sein-ph  .pl-verb-title { background: var(--sein-lt);  color: var(--sein);  }
+  .sein-ph  .pl-verb-title .vt-btn { background: var(--sein);  color: #fff; }
+  .haben-ph .pl-verb-title { background: var(--haben-lt); color: var(--haben); }
+  .haben-ph .pl-verb-title .vt-btn { background: var(--haben); color: #fff; }
+
+  .pl-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border: 1px solid var(--border);
+    border-radius: 0 0 var(--radius) var(--radius);
+    overflow: hidden;
+  }
+  @media (max-width: 700px) { .pl-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 420px) { .pl-grid { grid-template-columns: 1fr; } }
+
+  .pl-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 8px 8px 10px; gap: 5px; cursor: pointer;
+    transition: background .12s; border-bottom: 1px solid var(--border);
+  }
+  /* right border on all except every 4th column */
+  .pl-item:not(:nth-child(4n)) { border-right: 1px solid var(--border); }
+  /* remove bottom border on last row (last 4 items) */
+  .pl-item:nth-last-child(-n+4) { border-bottom: none; }
+
+  .pl-text { flex:1; min-width:0; pointer-events:none; }
+  .pl-fr { font-size: 10.5px; color: var(--ink3); margin-bottom: 2px; }
+  .pl-de { font-family: 'Lora', serif; font-size: 13px; font-weight: 600; }
+
+  .sein-ph  .pl-de { color: var(--sein);  }
+  .sein-ph  .pl-item:hover { background: #F5F1FF; }
+  .sein-ph  .pl-item.lit   { background: var(--sein-lt); }
+  .haben-ph .pl-de { color: var(--haben); }
+  .haben-ph .pl-item:hover { background: #FDF2F8; }
+  .haben-ph .pl-item.lit   { background: var(--haben-lt); }
+
+  .pl-acts { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .act-play {
+    width: 26px; height: 26px; border-radius: 50%; border: none;
+    background: transparent; cursor: pointer; color: var(--ink3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; transition: color .15s, transform .1s; padding: 0;
+  }
+  .act-play:active { transform: scale(.88); }
+  .sein-ph  .act-play:hover, .sein-ph  .act-play.playing { color: var(--sein);  }
+  .haben-ph .act-play:hover, .haben-ph .act-play.playing { color: var(--haben); }
+
+  .act-mic {
+    width: 24px; height: 24px; border-radius: 50%;
+    border: 1px solid; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; transition: transform .1s, background .15s;
+  }
+  .act-mic:active { transform: scale(.88); }
+  .sein-ph  .act-mic { background: var(--sein-lt);  border-color: var(--sein-brd);  color: var(--sein);  }
+  .sein-ph  .act-mic:hover { background: var(--sein-md); }
+  .sein-ph  .act-mic.recording { background: var(--sein);  color: #fff; animation: blink .7s infinite alternate; }
+  .haben-ph .act-mic { background: var(--haben-lt); border-color: var(--haben-brd); color: var(--haben); }
+  .haben-ph .act-mic:hover { background: var(--haben-md); }
+  .haben-ph .act-mic.recording { background: var(--haben); color: #fff; animation: blink .7s infinite alternate; }
+  @keyframes blink { from{opacity:1} to{opacity:.45} }
+
+  .act-score {
+    height: 20px; min-width: 40px; padding: 0 6px;
+    border-radius: 10px; border: 1px solid; font-size: 10.5px; font-weight: 600;
+    cursor: pointer; white-space: nowrap; display: none;
+    align-items: center; justify-content: center; transition: opacity .15s;
+  }
+  .act-score:hover { opacity: .75; }
+  .score-hi { background:#EAF3DE; border-color:#639922; color:#3B6D11; }
+  .score-md { background:#FAEEDA; border-color:#BA7517; color:#633806; }
+  .score-lo { background:#FCEBEB; border-color:#A32D2D; color:#791F1F; }
+
+  /* ── FOOTER ── */
+  .page-footer {
+    text-align: center; padding: 32px 24px 0;
+    font-size: 11px; color: var(--ink3);
+    letter-spacing: .04em;
+  }
+</style>
+</head>
+<body>
+
+<!-- SECTION 1 : CONJUGAISON -->
+<div class="section-label">Conjugaison — présent de l'indicatif</div>
+<div class="cj-grid" id="cj-grid"></div>
+
+<!-- TRANSITION -->
+<div class="transition-block">
+  <p>
+    Une fois la conjugaison maîtrisée, mettez-la en pratique avec des
+    <strong>phrases du quotidien</strong>. Cliquez sur n'importe quelle ligne
+    pour entendre la prononciation, puis testez la vôtre avec le
+    bouton <strong>micro</strong> — un score apparaîtra pour vous guider.
+  </p>
+</div>
+
+<!-- SECTION 2 : PHRASES -->
+<div class="section-label" style="padding-top:28px">Phrases essentielles</div>
+<div class="pl-outer" id="pl-outer"></div>
+
+<div class="page-footer">Cliquez sur une ligne pour écouter · 🎤 pour tester votre prononciation</div>
+
+<script>
+/* ═══════════════════════════════════════════
+   DATA
+═══════════════════════════════════════════ */
+const conjData = [
+  {
+    de:'sein', fr:'être', theme:'sein-theme',
+    rows:[
+      {pro:'ich',       proFr:'je',                   form:'bin'  },
+      {pro:'du',        proFr:'tu',                   form:'bist' },
+      {pro:'er',        proFr:'il',                   form:'ist'  },
+      {pro:'sie',       proFr:'elle',                 form:'ist'  },
+      {pro:'es',        proFr:'c\'est',               form:'ist'  },
+      {pro:'wir',       proFr:'nous',                 form:'sind' },
+      {pro:'ihr',       proFr:'vous',                 form:'seid' },
+      {pro:'sie',       proFr:'ils',                  form:'sind' },
+      {pro:'Sie',       proFr:'vous (formel)',        form:'sind' },
+    ]
+  },
+  {
+    de:'haben', fr:'avoir', theme:'haben-theme',
+    rows:[
+      {pro:'ich',       proFr:'je',                   form:'habe'  },
+      {pro:'du',        proFr:'tu',                   form:'hast'  },
+      {pro:'er',        proFr:'il',                   form:'hat'   },
+      {pro:'sie',       proFr:'elle',                 form:'hat'   },
+      {pro:'es',        proFr:'c\'est',               form:'hat'   },
+      {pro:'wir',       proFr:'nous',                 form:'haben' },
+      {pro:'ihr',       proFr:'vous',                 form:'habt'  },
+      {pro:'sie',       proFr:'ils',                  form:'haben' },
+      {pro:'Sie',       proFr:'vous (formel)',        form:'haben' },
+    ]
+  }
+];
+
+const phrasesData = [
+  {
+    de: 'sein', fr: 'être', theme:'sein-ph',
+    items: [
+      { fr: "Je suis fatigué", de: "Ich bin müde"},
+      { fr: "Tu es gentil", de: "Du bist nett" },
+      { fr: "Il est grand", de: "Er ist groß" },
+      { fr: "Elle est petite", de: "Sie ist klein" },
+      { fr: "Nous sommes contents", de: "Wir sind zufrieden"  },
+      { fr: "Vous êtes polis", de: "Sie sind höflich"  },
+      { fr: "Ils sont forts", de: "Sie sind stark"  },
+      { fr: "Elles sont belles", de: "Sie sind schön"  },
+      { fr: "Je suis étudiant", de: "Ich bin Student"  },
+      { fr: "Tu es médecin", de: "Du bist Arzt"  },
+      { fr: "Il est professeur", de: "Er ist Lehrer" },
+      { fr: "Elle est infirmière", de: "Sie ist Krankenschwester" },
+      { fr: "Nous sommes amis", de: "Wir sind Freunde"  },
+      { fr: "Vous êtes parents", de: "Sie sind Eltern"  },
+      { fr: "Ils sont voisins", de: "Sie sind Nachbarn"  },
+      { fr: "Elles sont sœurs", de: "Sie sind Schwestern"  },
+      { fr: "Je suis heureux", de: "Ich bin glücklich"  },
+      { fr: "Tu es triste", de: "Du bist traurig"  },
+      { fr: "Il est malade", de: "Er ist krank" },
+      { fr: "Elle est en retard", de: "Sie ist zu spät" },
+      { fr: "Nous sommes en vacances", de: "Wir sind im Urlaub"  },
+      { fr: "Vous êtes à l'heure", de: "Sie sind pünktlich"  },
+      { fr: "Ils sont à la maison", de: "Sie sind zu Hause"  },
+      { fr: "Elles sont au parc", de: "Sie sind im Park"  },
+      { fr: "Je suis chez moi", de: "Ich bin bei mir"  },
+      { fr: "Tu es au travail", de: "Du bist bei der Arbeit"  },
+      { fr: "Il est à l'école", de: "Er ist in der Schule" },
+      { fr: "Elle est au marché", de: "Sie ist auf dem Markt" },
+      { fr: "Nous sommes au cinéma", de: "Wir sind im Kino"  },
+      { fr: "Vous êtes au restaurant", de: "Sie sind im Restaurant"  },
+      { fr: "Ils sont en ville", de: "Sie sind in der Stadt"  },
+      { fr: "Elles sont à la plage", de: "Sie sind am Strand"  },
+      { fr: "Je suis prêt", de: "Ich bin bereit"  },
+      { fr: "Tu es calme", de: "Du bist ruhig"  },
+      { fr: "Il est sérieux", de: "Er ist ernst" },
+      { fr: "Elle est timide", de: "Sie ist schüchtern" },
+      { fr: "Nous sommes dynamiques", de: "Wir sind dynamisch"  },
+      { fr: "Vous êtes courageux", de: "Sie sind mutig"  },
+      { fr: "Ils sont patients", de: "Sie sind geduldig"  },
+      { fr: "Elles sont généreuses", de: "Sie sind großzügig"  },
+      { fr: "Je suis seul", de: "Ich bin allein"  },
+      { fr: "Tu es occupé", de: "Du bist beschäftigt"  },
+      { fr: "Il est libre", de: "Er ist frei" },
+      { fr: "Elle est mariée", de: "Sie ist verheiratet" },
+      { fr: "Nous sommes divorcés", de: "Wir sind geschieden"  },
+      { fr: "Vous êtes fiancés", de: "Sie sind verlobt"  },
+      { fr: "Ils sont séparés", de: "Sie sind getrennt"  },
+      { fr: "Elles sont veuves", de: "Sie sind Witwen"  },
+      { fr: "Je suis en forme", de: "Ich bin in Form"  },
+      { fr: "Tu es en danger", de: "Du bist in Gefahr"  },
+      { fr: "Il est en colère", de: "Er ist wütend" },
+      { fr: "Elle est en pleurs", de: "Sie ist in Tränen" },
+      { fr: "Nous sommes en paix", de: "Wir sind in Frieden"  },
+      { fr: "Vous êtes en guerre", de: "Sie sind im Krieg"  },
+      { fr: "Ils sont en réunion", de: "Sie sind in der Besprechung"  },
+      { fr: "Elles sont en train de dormir", de: "Sie sind am Schlafen"  },
+      { fr: "Je suis d'accord", de: "Ich bin einverstanden"  },
+      { fr: "Tu es contre", de: "Du bist dagegen"  },
+      { fr: "Il est pour", de: "Er ist dafür" },
+      { fr: "Elle est neutre", de: "Sie ist neutral" },
+      { fr: "Nous sommes certains", de: "Wir sind sicher"  },
+      { fr: "Vous êtes sûrs", de: "Sie sind sich sicher"  },
+      { fr: "Ils sont convaincus", de: "Sie sind überzeugt"  },
+      { fr: "Elles sont perplexes", de: "Sie sind ratlos"  },
+      { fr: "Je suis désolé", de: "Es tut mir leid"  },
+      { fr: "Tu es pardonné", de: "Dir ist vergeben"  },
+      { fr: "Il est coupable", de: "Er ist schuldig" },
+      { fr: "Elle est innocente", de: "Sie ist unschuldig" },
+      { fr: "Nous sommes responsables", de: "Wir sind verantwortlich"  },
+      { fr: "Vous êtes fautifs", de: "Sie sind schuld"  },
+      { fr: "Ils sont victimes", de: "Sie sind Opfer"  },
+      { fr: "Elles sont témoins", de: "Sie sind Zeuginnen"  },
+      { fr: "Je suis riche", de: "Ich bin reich"  },
+      { fr: "Tu es pauvre", de: "Du bist arm"  },
+      { fr: "Il est célèbre", de: "Er ist berühmt" },
+      { fr: "Elle est inconnue", de: "Sie ist unbekannt" },
+      { fr: "Nous sommes importants", de: "Wir sind wichtig"  },
+      { fr: "Vous êtes ordinaires", de: "Sie sind gewöhnlich"  },
+      { fr: "Ils sont spéciaux", de: "Sie sind besonders"  },
+      { fr: "Elles sont uniques", de: "Sie sind einzigartig"},
+      { fr: "Je suis vivant", de: "Ich bin lebendig"  },
+      { fr: "Tu es mort de rire", de: "Du stirbst vor Lachen"},
+      { fr: "Il est absent", de: "Er ist abwesend"},
+      { fr: "Elle est présente", de: "Sie ist anwesend"},
+      { fr: "Nous sommes prêts à partir", de: "Wir sind bereit zu gehen"},
+      { fr: "Vous êtes capables", de: "Sie sind fähig" },
+      { fr: "Ils sont incapables", de: "Sie sind unfähig" },
+      { fr: "Elles sont indispensables", de: "Sie sind unentbehrlich" },
+      { fr: "Je suis français", de: "Ich bin Franzose" },
+      { fr: "Tu es canadien", de: "Du bist Kanadier"},
+      { fr: "Il est belge", de: "Er ist Belgier"},
+      { fr: "Elle est suisse", de: "Sie ist Schweizerin"},
+      { fr: "Nous sommes marocains", de: "Wir sind Marokkaner"},
+      { fr: "Vous êtes algériens", de: "Sie sind Algerier"},
+      { fr: "Ils sont tunisiens", de: "Sie sind Tunesier"},
+      { fr: "Elles sont sénégalaises", de: "Sie sind Senegalesinnen"},
+      { fr: "Je suis petit", de: "Ich bin klein"},
+      { fr: "Tu es grand", de: "Du bist groß"},
+      { fr: "Il est mince", de: "Er ist dünn" },
+      { fr: "Elle est ronde", de: "Sie ist rundlich" }
+    ]
+  },
+  {
+    de:'haben', fr:'avoir', theme:'haben-ph',
+    items:[
+      {fr:"J'ai faim",                    de:"Ich habe Hunger"},
+      {fr:"J'ai soif",                    de:"Ich habe Durst"},
+      {fr:"J'ai froid",                   de:"Ich habe kalt"},
+      {fr:"J'ai chaud",                   de:"Ich habe warm"},
+      {fr:"J'ai peur",                    de:"Ich habe Angst"},
+      {fr:"Tu as le temps ?",             de:"Hast du Zeit?"},
+      {fr:"J'ai une question",            de:"Ich habe eine Frage"},
+      {fr:"Nous avons un problème",       de:"Wir haben ein Problem"},
+      {fr:"J'ai de la chance",            de:"Ich habe Glück"},
+      {fr:"Il a raison",                  de:"Er hat Recht"},
+      {fr:"J'ai besoin d'aide",           de:"Ich brauche Hilfe"},
+      {fr:"Avez-vous des enfants ?",      de:"Haben Sie Kinder?"},
+    ]
+  }
+];
+
+/* ═══════════════════════════════════════════
+   AUDIO
+═══════════════════════════════════════════ */
+let activeRec = null;
+
+function speak(text, triggerEl, rowEl) {
+  if (!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  document.querySelectorAll('.lit').forEach(e => e.classList.remove('lit'));
+  document.querySelectorAll('.playing').forEach(e => e.classList.remove('playing'));
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'de-DE'; u.rate = 0.82;
+  if (triggerEl) triggerEl.classList.add('playing');
+  if (rowEl)     rowEl.classList.add('lit');
+  u.onend = () => {
+    if (triggerEl) triggerEl.classList.remove('playing');
+    if (rowEl)     rowEl.classList.remove('lit');
+  };
+  speechSynthesis.speak(u);
+}
+
+function speakAll(rows, btn) {
+  if (!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  btn.classList.add('playing');
+  let i = 0;
+  function next() {
+    if (i >= rows.length) { btn.classList.remove('playing'); return; }
+    const r = rows[i++];
+    const u = new SpeechSynthesisUtterance(r.pro ? r.pro + ' ' + r.form : r.de);
+    u.lang='de-DE'; u.rate=0.82;
+    u.onend = () => setTimeout(next, 280);
+    speechSynthesis.speak(u);
+  }
+  next();
+}
+
+function similarity(a, b) {
+  a = a.toLowerCase().replace(/[^a-zäöüß ]/g,'').trim();
+  b = b.toLowerCase().replace(/[^a-zäöüß ]/g,'').trim();
+  if (a === b) return 1;
+  const la=a.length, lb=b.length;
+  if (!la||!lb) return 0;
+  const dp=Array.from({length:la+1},(_,i)=>Array.from({length:lb+1},(_,j)=>i===0?j:j===0?i:0));
+  for(let i=1;i<=la;i++) for(let j=1;j<=lb;j++)
+    dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j-1],dp[i-1][j],dp[i][j-1]);
+  return Math.max(0,1-dp[la][lb]/Math.max(la,lb));
+}
+
+function startRec(deText, micBtn, scoreBtn) {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { alert("Micro non supporté par ce navigateur."); return; }
+  if (activeRec) { try { activeRec.stop(); } catch(e){} }
+  const rec = new SR(); rec.lang='de-DE'; rec.interimResults=false; rec.maxAlternatives=5;
+  activeRec = rec;
+  micBtn.classList.add('recording'); micBtn.innerHTML = '<i class="ti ti-square-filled"></i>';
+  rec.onresult = e => {
+    const best = Array.from(e.results[0])
+      .reduce((b,a)=>{ const s=similarity(a.transcript,deText); return s>b.s?{s,t:a.transcript}:b; },{s:-1});
+    const pct = Math.round(Math.max(10,Math.min(100,best.s*115)));
+    micBtn.style.display='none';
+    scoreBtn.className='act-score '+(pct>=75?'score-hi':pct>=45?'score-md':'score-lo');
+    scoreBtn.textContent=(pct>=75?'✓':pct>=45?'~':'✗')+' '+pct+'%';
+    scoreBtn.style.display='flex';
+  };
+  rec.onerror = rec.onend = () => {
+    micBtn.classList.remove('recording');
+    micBtn.innerHTML='<i class="ti ti-microphone"></i>';
+    activeRec = null;
+  };
+  rec.start();
+}
+
+/* ═══════════════════════════════════════════
+   BUILD CONJUGAISON
+═══════════════════════════════════════════ */
+const cjGrid = document.getElementById('cj-grid');
+conjData.forEach(verb => {
+  const card = document.createElement('div');
+  card.className = 'cj-card ' + verb.theme;
+
+  const head = document.createElement('div');
+  head.className = 'cj-head';
+  head.innerHTML = `
+    <span class="cj-head-verb">${verb.de}</span>
+    <span class="cj-head-fr">— ${verb.fr}</span>
+    <button class="cj-head-btn" title="Écouter la conjugaison complète"><i class="ti ti-player-play-filled"></i></button>
+  `;
+  card.appendChild(head);
+
+  const table = document.createElement('table');
+  table.className = 'cj-table';
+  table.innerHTML = `<thead><tr><th>Pronom</th><th>Forme</th><th></th></tr></thead>`;
+  const tbody = document.createElement('tbody');
+
+  verb.rows.forEach((r, i) => {
+    const tr = document.createElement('tr');
+    tr.className = 'cj-row';
+    tr.innerHTML = `
+      <td class="cj-pro-cell">
+        <div class="cj-pro">${r.pro}</div>
+        <div class="cj-pro-fr">${r.proFr}</div>
+      </td>
+      <td><span class="cj-form">${r.form}</span></td>
+      <td class="cj-play-td">
+        <button class="mini-play" title="Écouter"><i class="ti ti-volume"></i></button>
+      </td>
+    `;
+    const mb = tr.querySelector('.mini-play');
+    const txt = r.pro + ' ' + r.form;
+    tr.addEventListener('click', () => speak(txt, mb, tr));
+    mb.addEventListener('click', e => { e.stopPropagation(); speak(txt, mb, tr); });
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  card.appendChild(table);
+
+  const allBtn = head.querySelector('.cj-head-btn');
+  allBtn.addEventListener('click', () => speakAll(verb.rows, allBtn));
+
+  cjGrid.appendChild(card);
+});
+
+/* ═══════════════════════════════════════════
+   BUILD PHRASE TABLE
+═══════════════════════════════════════════ */
+const plOuter = document.getElementById('pl-outer');
+phrasesData.forEach(section => {
+  const block = document.createElement('div');
+  block.className = 'pl-verb-block ' + section.theme;
+
+  const titleDiv = document.createElement('div');
+  titleDiv.className = 'pl-verb-title';
+  titleDiv.innerHTML = `
+    <span class="vt-de">${section.de}</span>
+    <span class="vt-fr">— ${section.fr}</span>
+    <button class="vt-btn" title="Écouter toutes les phrases"><i class="ti ti-player-play-filled"></i></button>
+  `;
+  block.appendChild(titleDiv);
+
+  const grid = document.createElement('div');
+  grid.className = 'pl-grid';
+
+  section.items.forEach((p, i) => {
+    const uid = section.de + i;
+    const item = document.createElement('div');
+    item.className = 'pl-item';
+    item.innerHTML = `
+      <div class="pl-text">
+        <div class="pl-fr">${p.fr}</div>
+        <div class="pl-de">${p.de}</div>
+      </div>
+      <div class="pl-acts">
+        <button class="act-play" title="Écouter"><i class="ti ti-volume"></i></button>
+        <button class="act-mic" title="Tester"><i class="ti ti-microphone"></i></button>
+        <button class="act-score" title="Réessayer"></button>
+      </div>
+    `;
+    const playBtn  = item.querySelector('.act-play');
+    const micBtn   = item.querySelector('.act-mic');
+    const scoreBtn = item.querySelector('.act-score');
+
+    item.addEventListener('click',  () => speak(p.de, playBtn, item));
+    micBtn.addEventListener('click', e  => { e.stopPropagation(); startRec(p.de, micBtn, scoreBtn); });
+    scoreBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      scoreBtn.style.display='none'; micBtn.style.display='flex';
+    });
+    grid.appendChild(item);
+  });
+
+  const allBtn = titleDiv.querySelector('.vt-btn');
+  allBtn.addEventListener('click', () => speakAll(section.items, allBtn));
+
+  block.appendChild(grid);
+  plOuter.appendChild(block);
+});
+</script>
+</body>
+</html>

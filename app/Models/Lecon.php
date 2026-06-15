@@ -9,9 +9,12 @@ class Lecon extends Model
     protected $fillable = [
         'chapitre_id',
         'mot_allemand',
+        'article',
         'traduction_francaise',
         'exemple',
         'chemin_audio',
+        'image_url',
+        'categorie',
         'code_couleur',
         'chiffre',
         'ordre',

@@ -24,6 +24,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('lab/cours/{slug}', ParcoursChapitres::class)->name('lab.cours.chapitres');
     Route::view('lab/explorer', 'app.explorer')->name('lab.explorer');
     Route::view('lab/progression', 'app.progression')->name('lab.progression');
+    
+    // Évaluation de Prononciation
+    Route::post('api/pronunciation/evaluate', [\App\Http\Controllers\PronunciationController::class, 'evaluate'])->name('pronunciation.evaluate');
 });
 
 require __DIR__.'/settings.php';
