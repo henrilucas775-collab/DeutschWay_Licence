@@ -148,6 +148,53 @@ class LearnSpace extends Component
         // Progression tracking — à implémenter.
     }
 
+    public function generateCoachingFeedback(string $targetPhrase, float $scorePercent)
+    {
+        // Configuration visuelle par défaut
+        $themeColorClass = 'amber';
+        $teacherInitials = 'KS';
+        $teacherName = 'Klaus Schneider';
+        $goodChips = [];
+        $warnChips = [];
+
+        if ($scorePercent >= 80) {
+            $themeColorClass = 'teal';
+            $teacherInitials = 'ML';
+            $teacherName = 'Marie Lefebvre';
+            $goodChips = ['Fluidité', 'Prononciation'];
+        } elseif ($scorePercent >= 65) {
+            $themeColorClass = 'purple';
+            $goodChips = ['Effort'];
+            $warnChips = ['Articulations'];
+        } else {
+            $warnChips = ['Syllabes', 'Rythme'];
+        }
+
+        $erreurs = "Le score global est de " . round($scorePercent) . "/100.";
+
+        try {
+            $prismResponse = \Prism\Prism\Facades\Prism::text()
+                ->using('gemini', 'gemini-2.5-flash')
+                ->withSystemPrompt("Tu es {$teacherName}, un professeur d'allemand strict mais très encourageant. Ton élève francophone a essayé de prononcer une phrase. Sois bref (1 ou 2 phrases max) et donne un conseil PRATIQUE sur la prononciation.")
+                ->withPrompt("La phrase cible était : '{$targetPhrase}'. \nVoici l'évaluation technique : {$erreurs}")
+                ->generate();
+
+            $feedbackText = $prismResponse->text;
+        } catch (\Exception $e) {
+            $feedbackText = "Bon effort ! Essaie d'écouter la prononciation native encore une fois et de bien détacher les syllabes.";
+        }
+
+        return [
+            'scorePercent' => round($scorePercent),
+            'themeColorClass' => $themeColorClass,
+            'teacherInitials' => $teacherInitials,
+            'teacherName' => $teacherName,
+            'feedbackText' => $feedbackText,
+            'goodChips' => $goodChips,
+            'warnChips' => $warnChips
+        ];
+    }
+
     public function render()
     {
         $quotidienData = $this->templateType === 'quotidien' ? $this->getFilteredItems() : [];

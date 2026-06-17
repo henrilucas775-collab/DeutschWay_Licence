@@ -22,6 +22,11 @@
                             --lab-accent: ${c} !important;
                             --lab-ui-accent: ${c} !important;
                             --lab-ui-accent-soft: rgba(${r}, ${g}, ${b}, 0.1) !important;
+                            --acc:     ${c} !important;
+                            --acc-lt:  rgba(${r}, ${g}, ${b}, 0.10) !important;
+                            --acc-md:  rgba(${r}, ${g}, ${b}, 0.25) !important;
+                            --acc-brd: rgba(${r}, ${g}, ${b}, 0.40) !important;
+                            --acc-hov: rgba(${r}, ${g}, ${b}, 0.15) !important;
                         }
                     `;
                 }

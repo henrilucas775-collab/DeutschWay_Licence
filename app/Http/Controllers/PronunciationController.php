@@ -8,6 +8,31 @@ use Prism\Prism\Facades\Prism;
 
 class PronunciationController extends Controller
 {
+    public function getToken()
+    {
+        $azureKey = env('AZURE_SPEECH_KEY');
+        $azureRegion = env('AZURE_SPEECH_REGION', 'francecentral');
+
+        if (!$azureKey) {
+            return response()->json(['error' => 'Clé Azure non configurée dans le fichier .env'], 500);
+        }
+
+        $url = "https://{$azureRegion}.api.cognitive.microsoft.com/sts/v1.0/issueToken";
+
+        $response = Http::withHeaders([
+            'Ocp-Apim-Subscription-Key' => $azureKey
+        ])->post($url);
+
+        if (!$response->successful()) {
+            return response()->json(['error' => 'Erreur lors de la génération du token Azure'], 500);
+        }
+
+        return response()->json([
+            'token' => $response->body(),
+            'region' => $azureRegion
+        ]);
+    }
+
     public function evaluate(Request $request)
     {
         $request->validate([
@@ -18,7 +43,7 @@ class PronunciationController extends Controller
         $audioFile = $request->file('audio');
         $targetPhrase = $request->input('phrase');
 
-        // 1. Configuration Azure (à définir dans ton fichier .env)
+        // 1. Configuration Azure
         $azureKey = env('AZURE_SPEECH_KEY');
         $azureRegion = env('AZURE_SPEECH_REGION', 'francecentral'); // ex: francecentral, westeurope
 
@@ -83,7 +108,7 @@ class PronunciationController extends Controller
 
         try {
             $prismResponse = Prism::text()
-                ->using('gemini', 'gemini-3-flash-preview')
+                ->using('gemini', 'gemini-2.5-flash')
                 ->withSystemPrompt("Tu es {$teacherName}, un professeur d'allemand strict mais très encourageant. Ton élève francophone a essayé de prononcer une phrase. Sois bref (1 ou 2 phrases max) et donne un conseil PRATIQUE sur la prononciation.")
                 ->withPrompt("La phrase cible était : '{$targetPhrase}'. \nVoici l'évaluation technique : {$erreurs}")
                 ->generate();

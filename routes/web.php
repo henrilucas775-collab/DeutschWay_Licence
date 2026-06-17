@@ -26,6 +26,7 @@ Route::middleware(['auth'])->group(function () {
     Route::view('lab/progression', 'app.progression')->name('lab.progression');
     
     // Évaluation de Prononciation
+    Route::get('api/pronunciation/token', [\App\Http\Controllers\PronunciationController::class, 'getToken'])->name('pronunciation.token');
     Route::post('api/pronunciation/evaluate', [\App\Http\Controllers\PronunciationController::class, 'evaluate'])->name('pronunciation.evaluate');
 });
 

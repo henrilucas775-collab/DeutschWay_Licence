@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Lecon;
+use App\Services\AzureTTSService;
 use App\Services\ElevenLabsService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
@@ -15,20 +16,29 @@ class GenerateLeconAudio extends Command
      *
      * @var string
      */
-    protected $signature = 'deutschway:generate-audio {--force : Régénérer même si l\'audio existe}';
+    protected $signature = 'deutschway:generate-audio {--force : Régénérer même si l\'audio existe} {--engine=azure : Le moteur TTS (azure ou elevenlabs)}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Génère les audios ElevenLabs pour les leçons (mots/phrases).';
+    protected $description = 'Génère les audios TTS pour les leçons (mots/phrases) via Azure ou ElevenLabs.';
 
     /**
      * Execute the console command.
      */
-    public function handle(ElevenLabsService $ttsService)
+    public function handle(ElevenLabsService $elevenLabsService, AzureTTSService $azureService)
     {
+        $engine = strtolower($this->option('engine'));
+        if (!in_array($engine, ['azure', 'elevenlabs'])) {
+            $this->error('L\'option --engine doit être "azure" ou "elevenlabs".');
+            return Command::FAILURE;
+        }
+
+        $ttsService = $engine === 'azure' ? $azureService : $elevenLabsService;
+        $this->info("Moteur sélectionné : " . strtoupper($engine));
+
         $query = Lecon::query();
 
         if (!$this->option('force')) {
@@ -49,10 +59,21 @@ class GenerateLeconAudio extends Command
         $bar->start();
 
         foreach ($lecons as $lecon) {
-            // Construire le texte (ajouter l'article s'il existe)
-            $texte = $lecon->mot_allemand;
-            if (!empty($lecon->article)) {
-                $texte = $lecon->article . ' ' . $texte;
+            // Logique intelligente pour construire le texte à prononcer
+            $categorie = $lecon->categorie ?? '';
+
+            if (str_starts_with($categorie, 'conjugaison-')) {
+                // ex: "ich" + " " + "bin"
+                $texte = trim($lecon->mot_allemand . ' ' . $lecon->exemple);
+            } elseif (str_starts_with($categorie, 'phrase-')) {
+                // ex: "Ich bin Student" (ignorer l'article 'sein')
+                $texte = trim($lecon->mot_allemand);
+            } else {
+                // Vocabulaire standard : article + mot
+                $texte = trim($lecon->mot_allemand);
+                if (!empty($lecon->article)) {
+                    $texte = trim($lecon->article . ' ' . $texte);
+                }
             }
 
             $audioBytes = $ttsService->generateAudio($texte);

@@ -1,3 +1,4 @@
+<script src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@latest/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js"></script>
 @include('livewire.learn-templates.styles-grammaire')
 
 @php
@@ -67,7 +68,7 @@ foreach ($phraseItems as $article => $rows) {
             <!-- VERB -->
             <div class="structure-card verb">
                 <div class="structure-label">Verbe</div>
-                <div class="structure-title">Verbes essentiels</div>
+                <div class="structure-title">Verbes de base</div>
                 <div class="structure-items">
                     <div class="structure-item"><div class="structure-item-de">sein</div><div class="structure-item-fr">être</div></div>
                     <div class="structure-item"><div class="structure-item-de">haben</div><div class="structure-item-fr">avoir</div></div>
@@ -155,14 +156,13 @@ foreach ($phraseItems as $article => $rows) {
             <p>Mettez-la en pratique avec des <strong>phrases du quotidien</strong>. Cliquez sur le microphone pour tester votre prononciation et recevoir l'aide de notre IA.</p>
         </div>
 
-        <div class="section-label" style="padding-top:28px">Phrases essentielles</div>
+        <div class="section-label" style="padding-top:28px">Phrases simple</div>
         
         <div class="pl-outer">
             @foreach($phrasesData as $section)
             <div class="pl-verb-block {{ $section['theme'] }}">
                 <div class="pl-verb-title">
                     <span class="vt-de">{{ $section['de'] }}</span>
-                    <span class="vt-fr">— {{ $section['fr'] }}</span>
                 </div>
                 <div class="pl-grid">
                     @foreach($section['items'] as $p)
@@ -176,13 +176,22 @@ foreach ($phraseItems as $article => $rows) {
                             <button class="act-play" @click.stop="playAudio('{{ $p['audio'] ?? '' }}', '{{ addslashes($p['de']) }}')">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
                             </button>
-                            <!-- Mic -->
-                            <button class="act-mic" x-show="!hasResult" :class="{'recording': isRecording}" @click.stop="toggleRecording()">
-                                <svg x-show="!isRecording" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/></svg>
+                            <!-- Mic / Stop / Loading -->
+                            <button class="act-mic" x-show="!hasResult" :class="{'recording': isRecording}" @click.stop="toggleRecording()" :disabled="isLoading && !isRecording">
+                                <!-- Default Mic -->
+                                <svg x-show="!isRecording && !isLoading" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/></svg>
+                                
+                                <!-- Recording (Stop Icon) -->
                                 <svg x-show="isRecording" width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+                                
+                                <!-- Loading (3 dots) -->
+                                <svg x-show="isLoading && !isRecording" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <circle cx="4" cy="12" r="3"><animate attributeName="opacity" values="1;.2;1" dur="1s" begin="0" repeatCount="indefinite" /></circle>
+                                    <circle cx="12" cy="12" r="3"><animate attributeName="opacity" values="1;.2;1" dur="1s" begin=".33" repeatCount="indefinite" /></circle>
+                                    <circle cx="20" cy="12" r="3"><animate attributeName="opacity" values="1;.2;1" dur="1s" begin=".66" repeatCount="indefinite" /></circle>
+                                </svg>
                             </button>
-                            <!-- Score with Tooltip -->
-                            <div class="mini-wrap" x-show="hasResult" style="display:none;">
+                            <div class="mini-wrap" x-show="hasResult && !isLoading" style="display:none;">
                                 <div class="mini-badge" :class="themeColorClass" @click.stop="resetTest()">
                                     <span class="num" x-text="scorePercent + '%'"></span>
                                 </div>
@@ -231,9 +240,12 @@ foreach ($phraseItems as $article => $rows) {
 </div>
 
 <script>
-    document.addEventListener('alpine:init', () => {
-        // Global lesson logic
-        Alpine.data('grammarLesson', () => ({
+    function initGrammarComponents() {
+        if (!window.Alpine) return;
+        
+        // Empêche la double-déclaration si on revient sur la page
+        if (!window.grammarComponentsLoaded) {
+            Alpine.data('grammarLesson', () => ({
             step: 1,
             playAudio(url, fallbackText) {
                 // Si un fichier audio ElevenLabs est disponible, on le joue
@@ -253,9 +265,10 @@ foreach ($phraseItems as $article => $rows) {
             }
         }));
 
-        // Individual Pronunciation Tester (Phase 1 mock -> Phase 2 real Azure)
+        // Individual Pronunciation Tester (Phase 2 real Azure client-side)
         Alpine.data('pronunciationTester', (targetPhrase) => ({
             isRecording: false,
+            isLoading: false,
             hasResult: false,
             scorePercent: 0,
             themeColorClass: '',
@@ -264,8 +277,7 @@ foreach ($phraseItems as $article => $rows) {
             feedbackText: '',
             goodChips: [],
             warnChips: [],
-            mediaRecorder: null,
-            audioChunks: [],
+            recognizer: null,
 
             async toggleRecording() {
                 if (this.isRecording) {
@@ -276,81 +288,103 @@ foreach ($phraseItems as $article => $rows) {
             },
 
             async startRecording() {
-                try {
-                    // Demande l'autorisation du micro
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    
-                    // On enregistre en format léger webm ou mp4
-                    const mimeType = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4';
-                    this.mediaRecorder = new MediaRecorder(stream, { mimeType: mimeType });
-                    this.audioChunks = [];
-
-                    this.mediaRecorder.ondataavailable = event => {
-                        if (event.data.size > 0) {
-                            this.audioChunks.push(event.data);
-                        }
-                    };
-
-                    this.mediaRecorder.onstop = () => {
-                        const audioBlob = new Blob(this.audioChunks, { type: mimeType });
-                        
-                        // Ferme le flux du micro pour éteindre la lumière rouge de la webcam/micro du navigateur
-                        stream.getTracks().forEach(track => track.stop());
-                        
-                        // Lance la requête vers notre futur backend
-                        this.sendAudioToServer(audioBlob);
-                    };
-
-                    this.mediaRecorder.start();
-                    this.isRecording = true;
-                } catch (err) {
-                    console.error("Erreur d'accès au microphone", err);
-                    alert("Veuillez autoriser l'accès au microphone pour tester votre prononciation.");
+                if (!window.SpeechSDK) {
+                    alert("Le SDK Azure Speech n'est pas encore chargé.");
+                    return;
                 }
-            },
+                
+                try {
+                    this.isLoading = true;
+                    this.hasResult = false;
+                    
+                    // Récupérer le token depuis Laravel
+                    const tokenResponse = await fetch('/api/pronunciation/token');
+                    if (!tokenResponse.ok) throw new Error("Erreur token Azure");
+                    const tokenData = await tokenResponse.json();
 
-            stopRecording() {
-                if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
-                    this.mediaRecorder.stop();
+                    const speechConfig = SpeechSDK.SpeechConfig.fromAuthorizationToken(tokenData.token, tokenData.region);
+                    speechConfig.speechRecognitionLanguage = "de-DE";
+
+                    const audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
+                    this.recognizer = new SpeechSDK.SpeechRecognizer(speechConfig, audioConfig);
+
+                    const pronAssessmentConfig = new SpeechSDK.PronunciationAssessmentConfig(
+                        targetPhrase,
+                        SpeechSDK.PronunciationAssessmentGradingSystem.HundredMark,
+                        SpeechSDK.PronunciationAssessmentGranularity.Phoneme,
+                        true
+                    );
+                    pronAssessmentConfig.applyTo(this.recognizer);
+
+                    this.isRecording = true;
+                    this.isLoading = false;
+
+                    this.recognizer.recognizeOnceAsync(
+                        async (result) => {
+                            this.isRecording = false;
+                            this.isLoading = true;
+                            
+                            if (result.reason === SpeechSDK.ResultReason.RecognizedSpeech) {
+                                const pronResult = SpeechSDK.PronunciationAssessmentResult.fromResult(result);
+                                const score = pronResult.pronunciationScore;
+                                
+                                // Appel Livewire (backend Laravel)
+                                try {
+                                    // Utilisation de $wire fourni par Livewire
+                                    const data = await this.$wire.generateCoachingFeedback(targetPhrase, score);
+                                    
+                                    this.scorePercent = data.scorePercent;
+                                    this.themeColorClass = data.themeColorClass;
+                                    this.teacherInitials = data.teacherInitials;
+                                    this.teacherName = data.teacherName;
+                                    this.feedbackText = data.feedbackText;
+                                    this.goodChips = data.goodChips;
+                                    this.warnChips = data.warnChips;
+                                    this.hasResult = true;
+                                } catch (error) {
+                                    console.error("Erreur Livewire:", error);
+                                    alert("Erreur lors de la génération du feedback de coaching.");
+                                }
+                            } else {
+                                console.error("Reconnaissance non réussie :", result.reason);
+                                alert("Nous n'avons pas pu reconnaître votre prononciation. Veuillez réessayer.");
+                            }
+                            
+                            this.isLoading = false;
+                            if (this.recognizer) {
+                                this.recognizer.close();
+                                this.recognizer = null;
+                            }
+                        },
+                        (err) => {
+                            console.error("Erreur de reconnaissance :", err);
+                            this.isRecording = false;
+                            this.isLoading = false;
+                            if (this.recognizer) {
+                                this.recognizer.close();
+                                this.recognizer = null;
+                            }
+                        }
+                    );
+                } catch (err) {
+                    console.error("Erreur d'accès", err);
+                    alert("Erreur de configuration du microphone ou d'Azure.");
+                    this.isLoading = false;
                     this.isRecording = false;
                 }
             },
 
-            async sendAudioToServer(audioBlob) {
-                // Création du FormData pour envoyer le fichier audio et la phrase cible
-                const formData = new FormData();
-                formData.append('audio', audioBlob, 'enregistrement.webm');
-                formData.append('phrase', targetPhrase);
-                
-                try {
-                    const response = await fetch('/api/pronunciation/evaluate', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-                        }
-                    });
+            stopRecording() {
+                if (this.recognizer && this.isRecording) {
+                    this.isRecording = false;
+                    this.isLoading = true; // On affiche les 3 petits points
                     
-                    if (!response.ok) {
-                        throw new Error("Erreur serveur");
+                    // On demande l'arrêt au SDK Azure, il déclenchera le callback recognized peu après
+                    try {
+                        this.recognizer.stopContinuousRecognitionAsync();
+                    } catch(e) {
+                        // ignore if it doesn't support manual stop
                     }
-                    
-                    const data = await response.json();
-                    
-                    // Assigner les résultats de l'IA aux variables Alpine
-                    this.hasResult = true;
-                    this.scorePercent = data.scorePercent;
-                    this.themeColorClass = data.themeColorClass;
-                    this.teacherInitials = data.teacherInitials;
-                    this.teacherName = data.teacherName;
-                    this.feedbackText = data.feedbackText;
-                    this.goodChips = data.goodChips;
-                    this.warnChips = data.warnChips;
-
-                } catch (error) {
-                    console.error("Erreur lors de l'évaluation", error);
-                    alert("Une erreur est survenue lors de l'analyse vocale. Vérifiez votre connexion et votre configuration Azure.");
-                    this.hasResult = false;
                 }
             },
 
@@ -359,5 +393,16 @@ foreach ($phraseItems as $article => $rows) {
                 this.scorePercent = 0;
             }
         }));
-    });
+
+        window.grammarComponentsLoaded = true;
+        }
+    }
+
+    // Si on arrive sur la page normalement (1er chargement)
+    document.addEventListener('alpine:init', initGrammarComponents);
+    
+    // Si Alpine est DÉJÀ chargé (Livewire / wire:navigate / composant dynamique)
+    if (window.Alpine) {
+        initGrammarComponents();
+    }
 </script>
