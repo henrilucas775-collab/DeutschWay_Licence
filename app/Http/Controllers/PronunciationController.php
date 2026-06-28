@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Prism\Prism\Facades\Prism;
 
 class PronunciationController extends Controller
@@ -13,23 +14,23 @@ class PronunciationController extends Controller
         $azureKey = env('AZURE_SPEECH_KEY');
         $azureRegion = env('AZURE_SPEECH_REGION', 'francecentral');
 
-        if (!$azureKey) {
+        if (! $azureKey) {
             return response()->json(['error' => 'Clé Azure non configurée dans le fichier .env'], 500);
         }
 
         $url = "https://{$azureRegion}.api.cognitive.microsoft.com/sts/v1.0/issueToken";
 
         $response = Http::withHeaders([
-            'Ocp-Apim-Subscription-Key' => $azureKey
+            'Ocp-Apim-Subscription-Key' => $azureKey,
         ])->post($url);
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             return response()->json(['error' => 'Erreur lors de la génération du token Azure'], 500);
         }
 
         return response()->json([
             'token' => $response->body(),
-            'region' => $azureRegion
+            'region' => $azureRegion,
         ]);
     }
 
@@ -47,7 +48,7 @@ class PronunciationController extends Controller
         $azureKey = env('AZURE_SPEECH_KEY');
         $azureRegion = env('AZURE_SPEECH_REGION', 'francecentral'); // ex: francecentral, westeurope
 
-        if (!$azureKey) {
+        if (! $azureKey) {
             return response()->json(['error' => 'Clé Azure non configurée dans le fichier .env'], 500);
         }
 
@@ -58,26 +59,31 @@ class PronunciationController extends Controller
             'ReferenceText' => $targetPhrase,
             'GradingSystem' => 'HundredMark',
             'Granularity' => 'Phoneme',
-            'Dimension' => 'Comprehensive'
+            'Dimension' => 'Comprehensive',
         ]));
 
         $azureResponse = Http::withHeaders([
             'Ocp-Apim-Subscription-Key' => $azureKey,
             'Content-Type' => $audioFile->getClientMimeType() ?: 'audio/webm',
             'Accept' => 'application/json',
-            'Pronunciation-Assessment' => $pronunciationParams
+            'Pronunciation-Assessment' => $pronunciationParams,
         ])->send('POST', $url, [
-            'body' => file_get_contents($audioFile->getRealPath())
+            'body' => file_get_contents($audioFile->getRealPath()),
         ]);
 
-        if (!$azureResponse->successful()) {
+        if (! $azureResponse->successful()) {
             return response()->json(['error' => 'Erreur lors de l\'analyse Azure', 'details' => $azureResponse->json()], 500);
         }
 
         $azureData = $azureResponse->json();
-        
+        Log::info('Azure Speech API Response:', $azureData ?? []);
+
         // 3. Extraction du score Azure
-        $scorePercent = $azureData['NBest'][0]['PronunciationAssessment']['PronScore'] ?? 0;
+        $pronAssessment = $azureData['NBest'][0]['PronunciationAssessment'] ?? [];
+        $scorePercent = $pronAssessment['PronScore'] ?? 0;
+        $accuracyScore = $pronAssessment['AccuracyScore'] ?? 0;
+        $fluencyScore = $pronAssessment['FluencyScore'] ?? 0;
+        $completenessScore = $pronAssessment['CompletenessScore'] ?? 0;
 
         // Configuration visuelle par défaut
         $themeColorClass = 'amber';
@@ -102,7 +108,7 @@ class PronunciationController extends Controller
         // 4. Appel à Gemini via Prism
         // On génère un contexte pour le LLM
         $erreurs = "Le score global est de {$scorePercent}/100.";
-        
+
         // (Optionnel) Ici tu pourrais extraire les phonèmes précis d'Azure
         // $erreurs .= json_encode($azureData['NBest'][0]['Words'] ?? []);
 
@@ -115,19 +121,22 @@ class PronunciationController extends Controller
 
             $feedbackText = $prismResponse->text;
         } catch (\Exception $e) {
-            // Fallback si l'API Gemini échoue ou n'est pas configurée
+            Log::error('Prism generation failed: '.$e->getMessage()."\n".$e->getTraceAsString());
             $feedbackText = "Bon effort ! Essaie d'écouter la prononciation native encore une fois et de bien détacher les syllabes.";
         }
 
         // 5. Retour des données au frontend Alpine.js
         return response()->json([
             'scorePercent' => round($scorePercent),
+            'accuracyScore' => round($accuracyScore),
+            'fluencyScore' => round($fluencyScore),
+            'completenessScore' => round($completenessScore),
             'themeColorClass' => $themeColorClass,
             'teacherInitials' => $teacherInitials,
             'teacherName' => $teacherName,
             'feedbackText' => $feedbackText,
             'goodChips' => $goodChips,
-            'warnChips' => $warnChips
+            'warnChips' => $warnChips,
         ]);
     }
 }

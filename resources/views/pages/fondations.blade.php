@@ -51,7 +51,7 @@
             </div>
 
             <!-- Timeline CECRL -->
-            <h2 class="text-center mb-12 uppercase tracking-widest">PARCOURS CECRL</h2>
+            <h2 class="text-center mb-12 uppercase tracking-widest">PARCOURS FONDATIONS</h2>
             <div class="timeline-container" style="overflow-x:auto; padding-bottom:2rem; -webkit-overflow-scrolling: touch;">
                 <div class="flex items-end" style="gap:2rem; position:relative; min-width:1800px; padding: 2rem;">
                     <div style="position:absolute;bottom:22px;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(221,0,0,.3),rgba(221,0,0,.5),rgba(221,0,0,.3),transparent);z-index:0;"></div>
@@ -79,7 +79,7 @@
                                 </div>
                                 <div class="bottom-section">
                                     <span class="title">{{ $label }}</span>
-                                    <span class="desc">Description courte du niveau {{ explode(' ', $label)[0] }}.</span>
+                                    <span class="desc">Commencez à explorer le module {{ explode(' ', $label)[0] }}.</span>
                                     <div class="row">
                                         <div class="item"><span class="big-text">Test</span><span class="regular-text">test</span></div>
                                         <div class="item"><span class="big-text">Quiz</span><span class="regular-text">quiz</span></div>

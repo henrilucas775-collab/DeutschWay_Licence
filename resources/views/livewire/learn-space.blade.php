@@ -18,6 +18,9 @@
         @elseif ($templateType === 'grammaire')
             @include('livewire.learn-templates.grammaire')
             
+        @elseif ($templateType === 'revision')
+            @include('livewire.learn-templates.revision')
+            
         @else
             @include('livewire.learn-templates.standard')
         @endif

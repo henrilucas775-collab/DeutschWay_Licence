@@ -3,45 +3,65 @@
 
 @php
 // Mapper dynamiquement les $items venus de la base de données vers la structure de la vue
+// Compatibilité avec les seeders : champs attendus = mot_allemand, traduction_francaise, exemple, chemin_audio, categorie, article
 $conjData = [];
 $phrasesData = [];
 
-// 1. Extraction des conjugaisons
-$conjItems = collect($items)->filter(fn($item) => str_starts_with($item['categorie'], 'conjugaison-'))->groupBy('article');
-foreach ($conjItems as $article => $rows) {
+$itemsCollection = collect($items);
+
+// 1. Extraction des conjugaisons : catégories commençant par 'conjugaison-'
+$conjItems = $itemsCollection->filter(fn($item) => isset($item['categorie']) && str_starts_with($item['categorie'], 'conjugaison-'))->groupBy('categorie');
+foreach ($conjItems as $cat => $rows) {
     $firstRow = $rows->first();
+    $verbLabel = $firstRow['article'] ?? preg_replace('/^conjugaison-/', '', $cat);
     $conjData[] = [
-        'de' => $article,
-        'fr' => $firstRow['fr'],
-        'theme' => $article . '-theme',
+        'de' => $verbLabel,
+        'fr' => $firstRow['traduction_francaise'] ?? '',
+        'theme' => $cat . '-theme',
         'rows' => $rows->map(function($r) {
             return [
-                'pro'   => $r['de'],
-                'proFr' => $r['hex'],
-                'form'  => $r['example'],
-                'audio' => $r['audio'] ? Storage::url($r['audio']) : null,
+                'pro'   => $r['mot_allemand'] ?? ($r['de'] ?? ''),
+                'proFr' => $r['traduction_francaise'] ?? ($r['fr'] ?? ''),
+                'form'  => $r['exemple'] ?? ($r['example'] ?? ''),
+                'audio' => !empty($r['chemin_audio']) ? Storage::url($r['chemin_audio']) : (!empty($r['audio']) ? Storage::url($r['audio']) : null),
             ];
         })->toArray()
     ];
 }
 
-// 2. Extraction des phrases d'exemple
-$phraseItems = collect($items)->filter(fn($item) => str_starts_with($item['categorie'], 'phrase-'))->groupBy('article');
-foreach ($phraseItems as $article => $rows) {
+// 2. Extraction des phrases d'exemple : accepter plusieurs catégories issues du seeder
+$phraseCats = ['phrases','phrase','negation','connecteurs','connector','connectors','prepositions','ordre-mots','phrases-sein','phrases-haben','phrase-sein','phrase-haben'];
+$phraseItems = $itemsCollection->filter(function($item) use ($phraseCats) {
+    if (!isset($item['categorie'])) return false;
+    if (str_starts_with($item['categorie'], 'phrase-')) return true;
+    return in_array($item['categorie'], $phraseCats);
+})->groupBy(function($item) {
+    // regrouper par 'article' si présent (ex: 'phrase'), sinon par categorie
+    return $item['article'] ?? $item['categorie'];
+});
+
+foreach ($phraseItems as $groupKey => $rows) {
     $firstRow = $rows->first();
     $phrasesData[] = [
-        'de' => $article,
-        'fr' => $firstRow['fr'] ?? '',
-        'theme' => $firstRow['hex'] ?? $article . '-ph',
+        'de' => $groupKey,
+        'fr' => $firstRow['traduction_francaise'] ?? ($firstRow['fr'] ?? ''),
+        'theme' => $firstRow['code_couleur'] ?? ($firstRow['hex'] ?? $groupKey . '-ph'),
         'items' => $rows->map(function($r) {
             return [
-                'de'    => $r['de'],
-                'fr'    => $r['fr'],
-                'audio' => $r['audio'] ? Storage::url($r['audio']) : null,
+                'de'    => $r['mot_allemand'] ?? ($r['de'] ?? ''),
+                'fr'    => $r['traduction_francaise'] ?? ($r['fr'] ?? ''),
+                'audio' => !empty($r['chemin_audio']) ? Storage::url($r['chemin_audio']) : (!empty($r['audio']) ? Storage::url($r['audio']) : null),
             ];
         })->toArray()
     ];
 }
+
+$phrasePages = array_chunk($phrasesData, 3);
+$firstPhrasePage = $phrasePages[0] ?? [];
+$remainingPhrasePages = array_slice($phrasePages, 1);
+$remainingPageCount = count($remainingPhrasePages);
+$phrasePageCount = count($phrasePages);
+$maxStep = 2 + $remainingPageCount;
 @endphp
 
 <div x-data="grammarLesson()">
@@ -159,7 +179,7 @@ foreach ($phraseItems as $article => $rows) {
         <div class="section-label" style="padding-top:28px">Phrases simple</div>
         
         <div class="pl-outer">
-            @foreach($phrasesData as $section)
+            @foreach($firstPhrasePage as $section)
             <div class="pl-verb-block {{ $section['theme'] }}">
                 <div class="pl-verb-title">
                     <span class="vt-de">{{ $section['de'] }}</span>
@@ -209,6 +229,11 @@ foreach ($phraseItems as $article => $rows) {
                                             <div class="t-bar-fill" :class="'fill-' + themeColorClass" :style="'width:' + scorePercent + '%'"></div>
                                         </div>
                                     </div>
+                                    <div class="t-sub-scores" x-show="accuracyScore > 0" style="display:none;font-size:11px;color:#888;display:flex;gap:10px;margin-top:4px;">
+                                        <span>Précision : <strong x-text="accuracyScore + '%'"></strong></span>
+                                        <span>Fluidité : <strong x-text="fluencyScore + '%'"></strong></span>
+                                        <span>Complétude : <strong x-text="completenessScore + '%'"></strong></span>
+                                    </div>
                                     <p class="t-text" x-html="feedbackText"></p>
                                     <div class="t-chips">
                                         <template x-for="chip in goodChips">
@@ -233,9 +258,101 @@ foreach ($phraseItems as $article => $rows) {
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg> Précédent
             </button>
             <div class="nav-spacer"></div>
-            <button class="nav-btn" disabled>Terminer</button>
+            @if($remainingPageCount > 0)
+            <button class="nav-btn" @click="step = 3; window.scrollTo({top:0, behavior:'smooth'})">Suivant <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+            @else
+            <a href="{{ route('lab.apprendre.revision', $chapitreSlug) }}" wire:navigate class="nav-btn" style="text-decoration:none; display:inline-flex;">Révision <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></a>
+            @endif
         </div>
     </div>
+
+    @foreach($remainingPhrasePages as $pageIndex => $page)
+    <div x-show="step === {{ $pageIndex + 3 }}" x-transition.opacity.duration.300ms style="display: none;">
+        <h3 class="lesson-subtitle" style="margin-bottom: 24px; color: var(--charcoal-mid);">Phrases pratiques — page {{ $pageIndex + 2 }} / {{ $phrasePageCount }}</h3>
+
+        <div class="pl-outer">
+            @foreach($page as $section)
+            <div class="pl-verb-block {{ $section['theme'] }}">
+                <div class="pl-verb-title">
+                    <span class="vt-de">{{ $section['de'] }}</span>
+                </div>
+                <div class="pl-grid">
+                    @foreach($section['items'] as $p)
+                    <div class="pl-item" x-data="pronunciationTester('{{ addslashes($p['de']) }}')" @click="if(!isRecording) playAudio('{{ $p['audio'] ?? '' }}', '{{ addslashes($p['de']) }}')">
+                        <div class="pl-text">
+                            <div class="pl-fr">{{ $p['fr'] }}</div>
+                            <div class="pl-de">{{ $p['de'] }}</div>
+                        </div>
+                        <div class="pl-acts">
+                            <!-- Play -->
+                            <button class="act-play" @click.stop="playAudio('{{ $p['audio'] ?? '' }}', '{{ addslashes($p['de']) }}')">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                            </button>
+                            <!-- Mic / Stop / Loading -->
+                            <button class="act-mic" x-show="!hasResult" :class="{'recording': isRecording}" @click.stop="toggleRecording()" :disabled="isLoading && !isRecording">
+                                <svg x-show="!isRecording && !isLoading" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/></svg>
+                                <svg x-show="isRecording" width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+                                <svg x-show="isLoading && !isRecording" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <circle cx="4" cy="12" r="3"><animate attributeName="opacity" values="1;.2;1" dur="1s" begin="0" repeatCount="indefinite"/></circle>
+                                    <circle cx="12" cy="12" r="3"><animate attributeName="opacity" values="1;.2;1" dur="1s" begin=".33" repeatCount="indefinite"/></circle>
+                                    <circle cx="20" cy="12" r="3"><animate attributeName="opacity" values="1;.2;1" dur="1s" begin=".66" repeatCount="indefinite"/></circle>
+                                </svg>
+                            </button>
+                            <div class="mini-wrap" x-show="hasResult && !isLoading" style="display:none;">
+                                <div class="mini-badge" :class="themeColorClass" @click.stop="resetTest()">
+                                    <span class="num" x-text="scorePercent + '%'">%</span>
+                                </div>
+                                <div class="mini-tooltip">
+                                    <div class="t-head">
+                                        <div class="t-avatar" :class="themeColorClass" x-text="teacherInitials"></div>
+                                        <div class="t-meta">
+                                            <div class="t-name" x-text="teacherName"></div>
+                                            <div class="t-role">Prononciation</div>
+                                        </div>
+                                    </div>
+                                    <div class="t-score-row">
+                                        <span class="t-score-val" :class="themeColorClass" x-text="scorePercent + '/100'">0/100</span>
+                                        <div class="t-bar-track">
+                                            <div class="t-bar-fill" :class="'fill-' + themeColorClass" :style="'width:' + scorePercent + '%'" ></div>
+                                        </div>
+                                    </div>
+                                    <div class="t-sub-scores" x-show="accuracyScore > 0" style="display:none;font-size:11px;color:#888;display:flex;gap:10px;margin-top:4px;">
+                                        <span>Précision : <strong x-text="accuracyScore + '%'"></strong></span>
+                                        <span>Fluidité : <strong x-text="fluencyScore + '%'"></strong></span>
+                                        <span>Complétude : <strong x-text="completenessScore + '%'"></strong></span>
+                                    </div>
+                                    <p class="t-text" x-html="feedbackText"></p>
+                                    <div class="t-chips">
+                                        <template x-for="chip in goodChips">
+                                            <span class="chip good" x-text="chip"></span>
+                                        </template>
+                                        <template x-for="chip in warnChips">
+                                            <span class="chip warn" x-text="chip"></span>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endforeach
+        </div>
+
+        <div class="lesson-nav">
+            <button class="nav-btn secondary" @click="step = {{ $pageIndex + 2 }}; window.scrollTo({top:0, behavior:'smooth'})">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg> Précédent
+            </button>
+            <div class="nav-spacer"></div>
+            @if($pageIndex + 3 < $maxStep)
+            <button class="nav-btn" @click="step = {{ $pageIndex + 4 }}; window.scrollTo({top:0, behavior:'smooth'})">Suivant <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+            @else
+            <a href="{{ route('lab.apprendre.revision', $chapitreSlug) }}" wire:navigate class="nav-btn" style="text-decoration:none; display:inline-flex;">Révision <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></a>
+            @endif
+        </div>
+    </div>
+    @endforeach
 
 </div>
 
@@ -247,6 +364,7 @@ foreach ($phraseItems as $article => $rows) {
         if (!window.grammarComponentsLoaded) {
             Alpine.data('grammarLesson', () => ({
             step: 1,
+            maxStep: {{ $maxStep }},
             playAudio(url, fallbackText) {
                 // Si un fichier audio ElevenLabs est disponible, on le joue
                 if (url) {
@@ -271,6 +389,9 @@ foreach ($phraseItems as $article => $rows) {
             isLoading: false,
             hasResult: false,
             scorePercent: 0,
+            accuracyScore: 0,
+            fluencyScore: 0,
+            completenessScore: 0,
             themeColorClass: '',
             teacherInitials: '',
             teacherName: '',
@@ -326,20 +447,27 @@ foreach ($phraseItems as $article => $rows) {
                             
                             if (result.reason === SpeechSDK.ResultReason.RecognizedSpeech) {
                                 const pronResult = SpeechSDK.PronunciationAssessmentResult.fromResult(result);
-                                const score = pronResult.pronunciationScore;
+                                const score        = pronResult.pronunciationScore ?? 0;
+                                const accuracy     = pronResult.accuracyScore     ?? 0;
+                                const fluency      = pronResult.fluencyScore      ?? 0;
+                                const completeness = pronResult.completenessScore ?? 0;
                                 
                                 // Appel Livewire (backend Laravel)
                                 try {
-                                    // Utilisation de $wire fourni par Livewire
-                                    const data = await this.$wire.generateCoachingFeedback(targetPhrase, score);
+                                    const data = await this.$wire.generateCoachingFeedback(
+                                        targetPhrase, score, accuracy, fluency, completeness
+                                    );
                                     
-                                    this.scorePercent = data.scorePercent;
-                                    this.themeColorClass = data.themeColorClass;
-                                    this.teacherInitials = data.teacherInitials;
-                                    this.teacherName = data.teacherName;
-                                    this.feedbackText = data.feedbackText;
-                                    this.goodChips = data.goodChips;
-                                    this.warnChips = data.warnChips;
+                                    this.scorePercent      = data.scorePercent;
+                                    this.accuracyScore     = data.accuracyScore;
+                                    this.fluencyScore      = data.fluencyScore;
+                                    this.completenessScore = data.completenessScore;
+                                    this.themeColorClass   = data.themeColorClass;
+                                    this.teacherInitials   = data.teacherInitials;
+                                    this.teacherName       = data.teacherName;
+                                    this.feedbackText      = data.feedbackText;
+                                    this.goodChips         = data.goodChips;
+                                    this.warnChips         = data.warnChips;
                                     this.hasResult = true;
                                 } catch (error) {
                                     console.error("Erreur Livewire:", error);

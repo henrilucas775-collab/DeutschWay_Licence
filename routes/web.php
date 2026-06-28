@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PronunciationController;
 use App\Livewire\ParcoursChapitres;
 use Illuminate\Support\Facades\Route;
 
@@ -14,8 +15,11 @@ Route::middleware(['auth'])->group(function () {
     Route::view('dashboard', 'app.dashboard')->name('dashboard');
     Route::view('lab/apprendre', 'app.apprendre')->name('lab.apprendre');
     Route::get('lab/apprendre/{chapitre}', function ($chapitre) {
-        return view('app.apprendre', ['chapitreSlug' => $chapitre]);
+        return view('app.apprendre', ['chapitreSlug' => $chapitre, 'isRevision' => false]);
     })->name('lab.apprendre.show');
+    Route::get('lab/apprendre/{chapitre}/revision', function ($chapitre) {
+        return view('app.apprendre', ['chapitreSlug' => $chapitre, 'isRevision' => true]);
+    })->name('lab.apprendre.revision');
     Route::get('lab/cours', function () {
         return view('app.cours', [
             'parcoursList' => ParcoursChapitres::catalog(),
@@ -24,10 +28,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('lab/cours/{slug}', ParcoursChapitres::class)->name('lab.cours.chapitres');
     Route::view('lab/explorer', 'app.explorer')->name('lab.explorer');
     Route::view('lab/progression', 'app.progression')->name('lab.progression');
-    
+
     // Évaluation de Prononciation
-    Route::get('api/pronunciation/token', [\App\Http\Controllers\PronunciationController::class, 'getToken'])->name('pronunciation.token');
-    Route::post('api/pronunciation/evaluate', [\App\Http\Controllers\PronunciationController::class, 'evaluate'])->name('pronunciation.evaluate');
+    Route::get('api/pronunciation/token', [PronunciationController::class, 'getToken'])->name('pronunciation.token');
+    Route::post('api/pronunciation/evaluate', [PronunciationController::class, 'evaluate'])->name('pronunciation.evaluate');
 });
 
 require __DIR__.'/settings.php';

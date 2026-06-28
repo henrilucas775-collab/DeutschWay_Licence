@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bulle Recorder — Minimal 3D</title>
+
+  <style>
+    :root{
+      --bg: #05060a;
+      --text: #f5f7ff;
+      --muted: rgba(245,247,255,.62);
+      --size: 92px; /* 50% de la version précédente (184px) */
+      --accent: #7c5cff;
+      --accent2: #00c2ff;
+      --record: #ff2d55;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% 20%, rgba(124,92,255,.20), transparent 35%),
+        radial-gradient(circle at 20% 80%, rgba(0,194,255,.12), transparent 30%),
+        radial-gradient(circle at 80% 80%, rgba(255,45,85,.10), transparent 25%),
+        linear-gradient(180deg, #070816 0%, #05060a 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -10%;
+      pointer-events: none;
+      background: radial-gradient(circle at center, rgba(255,255,255,.03), transparent 55%);
+      filter: blur(30px);
+    }
+
+    .ambient {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(70px);
+      opacity: .7;
+      z-index: 0;
+      animation: float 14s ease-in-out infinite;
+    }
+
+    .ambient-a {
+      width: 280px;
+      height: 280px;
+      left: -70px;
+      top: -40px;
+      background: rgba(124,92,255,.14);
+    }
+
+    .ambient-b {
+      width: 220px;
+      height: 220px;
+      right: -40px;
+      bottom: -30px;
+      background: rgba(0,194,255,.10);
+      animation-direction: reverse;
+      animation-duration: 16s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate3d(0,0,0) scale(1); }
+      50% { transform: translate3d(0,18px,0) scale(1.08); }
+    }
+
+    .hud {
+      position: fixed;
+      top: 18px;
+      left: 18px;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-self: flex-start;
+      padding: 8px 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(10,12,20,.55);
+      backdrop-filter: blur(14px);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+
+    .status {
+      display: inline-flex;
+      align-self: flex-start;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(10,12,20,.42);
+      border: 1px solid rgba(255,255,255,.08);
+      color: var(--muted);
+      font-size: 12px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.16);
+    }
+
+    .hint {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      z-index: 50;
+      text-align: center;
+      color: rgba(245,247,255,.42);
+      font-size: 12px;
+      letter-spacing: .2px;
+      padding: 10px 16px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(10,12,20,.35);
+      backdrop-filter: blur(12px);
+      border-radius: 999px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.2);
+      max-width: calc(100vw - 20px);
+    }
+
+    #bubble-container {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      width: var(--size);
+      height: var(--size);
+      transform: translate(-50%, -50%) scale(var(--scale, 1));
+      transform-origin: center;
+      user-select: none;
+      touch-action: none;
+      cursor: grab;
+      z-index: 20;
+      overflow: visible;
+      border-radius: 50%;
+      isolation: isolate;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.18),
+        inset 0 -16px 24px rgba(0,0,0,.34),
+        0 18px 35px rgba(0,0,0,.36),
+        0 0 24px rgba(124,92,255,.18);
+      background:
+        radial-gradient(circle at 30% 24%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.40) 7%, rgba(255,255,255,.10) 18%, transparent 30%),
+        radial-gradient(circle at 50% 40%, rgba(255,255,255,.10), rgba(255,255,255,0) 55%),
+        radial-gradient(circle at 50% 50%, rgba(124,92,255,.28) 0%, rgba(18,20,34,.78) 58%, rgba(0,0,0,.95) 100%);
+      transition: transform .12s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+    #bubble-container.dragging {
+      cursor: grabbing;
+      --scale: 1.05;
+    }
+
+    #bubble-container.recording {
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.18),
+        inset 0 -16px 24px rgba(0,0,0,.34),
+        0 18px 35px rgba(0,0,0,.36),
+        0 0 28px rgba(255,45,85,.22);
+      background:
+        radial-gradient(circle at 30% 24%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.40) 7%, rgba(255,255,255,.10) 18%, transparent 30%),
+        radial-gradient(circle at 50% 40%, rgba(255,255,255,.09), rgba(255,255,255,0) 55%),
+        radial-gradient(circle at 50% 50%, rgba(255,45,85,.32) 0%, rgba(36,12,18,.80) 58%, rgba(0,0,0,.95) 100%);
+    }
+
+    #bubble-container::before {
+      content: "";
+      position: absolute;
+      inset: 9px;
+      border-radius: 50%;
+      pointer-events: none;
+      background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.10), rgba(255,255,255,0) 55%);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.08),
+        inset 0 -10px 18px rgba(0,0,0,.18);
+      z-index: -1;
+    }
+
+    #bubble-container::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      pointer-events: none;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.22), rgba(255,255,255,0) 28%),
+        linear-gradient(325deg, rgba(255,255,255,.06), rgba(255,255,255,0) 40%);
+      mix-blend-mode: screen;
+      opacity: .8;
+      z-index: 4;
+    }
+
+    #visualizer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 1;
+      filter: drop-shadow(0 0 10px rgba(0, 194, 255, .16));
+      transform: rotate(300deg);
+    }
+
+    #bubble-container.recording #visualizer {
+      filter: drop-shadow(0 0 12px rgba(255,45,85,.25));
+    }
+
+    .robot-icon {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: 58%;
+      height: 58%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 3;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,.30));
+      opacity: .98;
+    }
+
+    .robot-icon svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    @media (max-width: 640px), (pointer: coarse) {
+      :root {
+        --size: 88px;
+      }
+
+      .hint {
+        white-space: normal;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+
+  <div class="hud">
+    <div class="badge">Bulle Recorder</div>
+    <div class="status" id="status">Clique sur la bulle pour enregistrer</div>
+  </div>
+
+  <div class="hint">Clique pour enregistrer / arrêter • Glisse pour déplacer</div>
+
+  <div id="bubble-container" aria-label="Bulle d'enregistrement">
+    <canvas id="visualizer"></canvas>
+
+    <div class="robot-icon" aria-hidden="true">
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="robotGrad" x1="12" y1="10" x2="52" y2="56" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#9b8cff"/>
+            <stop offset="0.5" stop-color="#5ee7ff"/>
+            <stop offset="1" stop-color="#ff6b9a"/>
+          </linearGradient>
+          <linearGradient id="glassGrad" x1="18" y1="18" x2="46" y2="48" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="rgba(255,255,255,.18)"/>
+            <stop offset="1" stop-color="rgba(255,255,255,.04)"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Antenne -->
+        <path d="M32 8V14" stroke="url(#robotGrad)" stroke-width="2.6" stroke-linecap="round"/>
+        <circle cx="32" cy="7" r="2.5" fill="url(#robotGrad)"/>
+
+        <!-- Tête / corps robot -->
+        <rect x="13.5" y="17.5" width="37" height="31" rx="14" fill="url(#glassGrad)" stroke="url(#robotGrad)" stroke-width="2.2"/>
+
+        <!-- Petit reflet -->
+        <path d="M20 22C22 20 25 19 29 19" stroke="rgba(255,255,255,.24)" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- Yeux -->
+        <circle cx="26" cy="31" r="3.2" fill="#ffffff"/>
+        <circle cx="38" cy="31" r="3.2" fill="#ffffff"/>
+
+        <!-- Sourire -->
+        <path d="M24 39C26.5 41.5 37.5 41.5 40 39" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- Bulles de langage -->
+        <path d="M44 24H49C51.8 24 54 26.2 54 29V31C54 33.8 51.8 36 49 36H47L44 39V36H44C41.2 36 39 33.8 39 31V29C39 26.2 41.2 24 44 24Z"
+              fill="rgba(255,255,255,.10)" stroke="url(#robotGrad)" stroke-width="1.6" stroke-linejoin="round"/>
+        <path d="M44.5 29.5H48.5" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M44.5 32.5H46.8" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+
+        <!-- Lettre / apprentissage -->
+        <text x="47" y="34.2" text-anchor="middle" font-size="7.5" font-weight="700" fill="#ffffff">A</text>
+
+        <!-- Petite étoile -->
+        <path d="M17 25L18.2 27.7L21 29L18.2 30.3L17 33L15.8 30.3L13 29L15.8 27.7L17 25Z" fill="#5ee7ff" opacity=".92"/>
+      </svg>
+    </div>
+  </div>
+
+  <script>
+    const bubble = document.getElementById('bubble-container');
+    const canvas = document.getElementById('visualizer');
+    const ctx = canvas.getContext('2d');
+    const statusEl = document.getElementById('status');
+
+    let audioCtx = null;
+    let analyser = null;
+    let mediaRecorder = null;
+    let audioStream = null;
+    let recordedChunks = [];
+    let visualData = null;
+
+    let bubbleSize = 92;
+    let pointerDown = false;
+    let moved = false;
+    let startPoint = { x: 0, y: 0 };
+    let dragOffset = { x: 0, y: 0 };
+
+    function setStatus(text) {
+      statusEl.textContent = text;
+    }
+
+    function clampCenter(x, y) {
+      const half = bubbleSize / 2;
+      const margin = 16;
+
+      const minX = half + margin;
+      const maxX = window.innerWidth - half - margin;
+
+      const minY = half + margin;
+      const maxY = window.innerHeight - half - margin;
+
+      return {
+        x: Math.min(maxX, Math.max(minX, x)),
+        y: Math.min(maxY, Math.max(minY, y))
+      };
+    }
+
+    function setBubbleCenter(x, y) {
+      bubble.style.left = `${x}px`;
+      bubble.style.top = `${y}px`;
+    }
+
+    function centerBubble() {
+      setBubbleCenter(window.innerWidth / 2, window.innerHeight / 2);
+    }
+
+    function resizeCanvas() {
+      const rect = bubble.getBoundingClientRect();
+      bubbleSize = Math.round(rect.width);
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = bubbleSize * dpr;
+      canvas.height = bubbleSize * dpr;
+      canvas.style.width = `${bubbleSize}px`;
+      canvas.style.height = `${bubbleSize}px`;
+
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    async function initMicrophone() {
+      if (audioStream) return true;
+
+      try {
+        setStatus("Demande d’accès au micro…");
+
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          setStatus("getUserMedia non supporté");
+          return false;
+        }
+
+        audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') {
+          await audioCtx.resume();
+        }
+
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 256;
+
+        const source = audioCtx.createMediaStreamSource(audioStream);
+        source.connect(analyser);
+
+        visualData = new Uint8Array(analyser.frequencyBinCount);
+
+        const supportsRecorder = typeof MediaRecorder !== 'undefined';
+        if (!supportsRecorder) {
+          setStatus("MediaRecorder non supporté");
+          return false;
+        }
+
+        let mimeType = '';
+        if (typeof MediaRecorder.isTypeSupported === 'function') {
+          if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+            mimeType = 'audio/webm;codecs=opus';
+          } else if (MediaRecorder.isTypeSupported('audio/ogg;codecs=opus')) {
+            mimeType = 'audio/ogg;codecs=opus';
+          }
+        }
+
+        mediaRecorder = mimeType
+          ? new MediaRecorder(audioStream, { mimeType })
+          : new MediaRecorder(audioStream);
+
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data && e.data.size > 0) {
+            recordedChunks.push(e.data);
+          }
+        };
+
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(recordedChunks, {
+            type: mediaRecorder.mimeType || 'audio/webm'
+          });
+
+          recordedChunks = [];
+          URL.createObjectURL(blob); // si tu veux la sauvegarde / lecture plus tard
+
+          bubble.classList.remove('recording');
+          setStatus("Enregistrement terminé");
+        };
+
+        setStatus("Micro prêt");
+        return true;
+      } catch (err) {
+        console.error(err);
+        setStatus("Accès micro refusé ou indisponible");
+        return false;
+      }
+    }
+
+    async function toggleRecording() {
+      const ok = await initMicrophone();
+      if (!ok || !mediaRecorder) return;
+
+      if (audioCtx && audioCtx.state === 'suspended') {
+        await audioCtx.resume();
+      }
+
+      if (mediaRecorder.state === 'inactive') {
+        recordedChunks = [];
+        mediaRecorder.start();
+        bubble.classList.add('recording');
+        setStatus("Enregistrement en cours…");
+      } else if (mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+        setStatus("Traitement du son…");
+      }
+    }
+
+    bubble.addEventListener('pointerdown', (e) => {
+      pointerDown = true;
+      moved = false;
+      bubble.setPointerCapture(e.pointerId);
+
+      startPoint.x = e.clientX;
+      startPoint.y = e.clientY;
+
+      const rect = bubble.getBoundingClientRect();
+      dragOffset.x = e.clientX - (rect.left + rect.width / 2);
+      dragOffset.y = e.clientY - (rect.top + rect.height / 2);
+    });
+
+    bubble.addEventListener('pointermove', (e) => {
+      if (!pointerDown) return;
+
+      const dist = Math.hypot(e.clientX - startPoint.x, e.clientY - startPoint.y);
+
+      if (dist > 6) {
+        moved = true;
+        bubble.classList.add('dragging');
+
+        const next = clampCenter(
+          e.clientX - dragOffset.x,
+          e.clientY - dragOffset.y
+        );
+
+        setBubbleCenter(next.x, next.y);
+      }
+    });
+
+    bubble.addEventListener('pointerup', async () => {
+      pointerDown = false;
+      bubble.classList.remove('dragging');
+
+      // Si ce n'est pas un drag, on considère ça comme un clic
+      if (!moved) {
+        await toggleRecording();
+      }
+    });
+
+    bubble.addEventListener('pointercancel', () => {
+      pointerDown = false;
+      moved = false;
+      bubble.classList.remove('dragging');
+    });
+
+    window.addEventListener('blur', () => {
+      pointerDown = false;
+      moved = false;
+      bubble.classList.remove('dragging');
+    });
+
+    function draw(t) {
+      requestAnimationFrame(draw);
+
+      const size = bubbleSize;
+      const cx = size / 2;
+      const cy = size / 2;
+
+      const recording = mediaRecorder?.state === 'recording';
+      const audioReady = analyser && visualData;
+
+      if (audioReady) {
+        analyser.getByteFrequencyData(visualData);
+      }
+
+      ctx.clearRect(0, 0, size, size);
+
+      // Barres audio
+      const barCount = 28;
+      const innerRadius = size * 0.22;
+      const maxLen = size * 0.14;
+      const animationAmp = 0.10 + 0.05 * Math.sin(t * 0.004);
+
+      for (let i = 0; i < barCount; i++) {
+        const angle = (i / barCount) * Math.PI * 2 - Math.PI / 2;
+
+        let amp = animationAmp;
+        if (audioReady) {
+          const idx = Math.floor(i * (visualData.length / barCount) * 0.85);
+          amp = visualData[idx] / 255;
+        }
+
+        const len = 4 + amp * maxLen;
+
+        const x1 = cx + Math.cos(angle) * innerRadius;
+        const y1 = cy + Math.sin(angle) * innerRadius;
+        const x2 = cx + Math.cos(angle) * (innerRadius + len);
+        const y2 = cy + Math.sin(angle) * (innerRadius + len);
+
+        const hue = recording ? 350 + i * 0.4 : 190 + i * 1.0;
+
+        ctx.strokeStyle = `hsla(${hue}, 100%, ${recording ? '66%' : '72%'}, ${0.25 + amp * 0.70})`;
+        ctx.lineWidth = 1.8;
+        ctx.lineCap = 'round';
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      }
+
+      // Anneau fin interne — supprimé
+    }
+
+    function handleResize() {
+      resizeCanvas();
+
+      const rect = bubble.getBoundingClientRect();
+      const currentCenterX = rect.left + rect.width / 2;
+      const currentCenterY = rect.top + rect.height / 2;
+      const clamped = clampCenter(currentCenterX, currentCenterY);
+
+      setBubbleCenter(clamped.x, clamped.y);
+    }
+
+    window.addEventListener('resize', handleResize);
+
+    window.addEventListener('beforeunload', () => {
+      if (audioStream) {
+        audioStream.getTracks().forEach(track => track.stop());
+      }
+    });
+
+    // Init
+    handleResize();
+    centerBubble();
+    requestAnimationFrame(draw);
+  </script>
+</body>
+</html>

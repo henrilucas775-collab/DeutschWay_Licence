@@ -3,8 +3,10 @@
 namespace App\Livewire;
 
 use App\Models\Chapitre;
+use App\Services\AzureTTSService;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Prism\Prism\Facades\Prism;
 
 class LearnSpace extends Component
 {
@@ -46,9 +48,12 @@ class LearnSpace extends Component
         $this->currentPage = $page;
     }
 
-    public function mount(string $chapitreSlug): void
+    public bool $isRevision = false;
+
+    public function mount(string $chapitreSlug, bool $isRevision = false): void
     {
         $this->chapitreSlug = $chapitreSlug;
+        $this->isRevision = $isRevision;
 
         $chapitre = Chapitre::where('slug', $chapitreSlug)->with(['lecons', 'parcours'])->first();
 
@@ -60,11 +65,11 @@ class LearnSpace extends Component
 
         $this->chapitreData = [
             'id' => $chapitre->id,
-            'titre' => $chapitre->titre,
-            'sur_titre' => $chapitre->sur_titre,
-            'description' => $chapitre->description,
+            'titre' => $this->isRevision ? 'Révision : '.$chapitre->titre : $chapitre->titre,
+            'sur_titre' => $this->isRevision ? 'Laboratoire de révision' : $chapitre->sur_titre,
+            'description' => $this->isRevision ? 'Testez vos connaissances sur ce chapitre via des exercices interactifs.' : $chapitre->description,
         ];
-        $this->templateType = $chapitre->template_vue;
+        $this->templateType = $this->isRevision ? 'revision' : $chapitre->template_vue;
 
         $this->items = $chapitre->lecons->map(function ($lecon) {
             return [
@@ -148,8 +153,13 @@ class LearnSpace extends Component
         // Progression tracking — à implémenter.
     }
 
-    public function generateCoachingFeedback(string $targetPhrase, float $scorePercent)
-    {
+    public function generateCoachingFeedback(
+        string $targetPhrase,
+        float $scorePercent,
+        float $accuracyScore = 0,
+        float $fluencyScore = 0,
+        float $completenessScore = 0
+    ): array {
         // Configuration visuelle par défaut
         $themeColorClass = 'amber';
         $teacherInitials = 'KS';
@@ -170,10 +180,13 @@ class LearnSpace extends Component
             $warnChips = ['Syllabes', 'Rythme'];
         }
 
-        $erreurs = "Le score global est de " . round($scorePercent) . "/100.";
+        $erreurs = 'Le score global est de '.round($scorePercent).'/100.';
+        if ($accuracyScore > 0) {
+            $erreurs .= ' Précision : '.round($accuracyScore).'%, Fluidité : '.round($fluencyScore).'%, Complétude : '.round($completenessScore).'%.';
+        }
 
         try {
-            $prismResponse = \Prism\Prism\Facades\Prism::text()
+            $prismResponse = Prism::text()
                 ->using('gemini', 'gemini-2.5-flash')
                 ->withSystemPrompt("Tu es {$teacherName}, un professeur d'allemand strict mais très encourageant. Ton élève francophone a essayé de prononcer une phrase. Sois bref (1 ou 2 phrases max) et donne un conseil PRATIQUE sur la prononciation.")
                 ->withPrompt("La phrase cible était : '{$targetPhrase}'. \nVoici l'évaluation technique : {$erreurs}")
@@ -186,12 +199,38 @@ class LearnSpace extends Component
 
         return [
             'scorePercent' => round($scorePercent),
+            'accuracyScore' => round($accuracyScore),
+            'fluencyScore' => round($fluencyScore),
+            'completenessScore' => round($completenessScore),
             'themeColorClass' => $themeColorClass,
             'teacherInitials' => $teacherInitials,
             'teacherName' => $teacherName,
             'feedbackText' => $feedbackText,
             'goodChips' => $goodChips,
-            'warnChips' => $warnChips
+            'warnChips' => $warnChips,
+        ];
+    }
+
+    /**
+     * @return array{audioBase64?: string, mimeType?: string, error?: string}
+     */
+    public function synthesizeCoachSpeech(string $text, AzureTTSService $azureTts): array
+    {
+        $text = trim($text);
+
+        if ($text === '') {
+            return ['error' => 'Texte vide'];
+        }
+
+        $audio = $azureTts->generateAudio($text, 'fr-FR');
+
+        if ($audio === null) {
+            return ['error' => 'Synthèse vocale Azure indisponible'];
+        }
+
+        return [
+            'audioBase64' => base64_encode($audio),
+            'mimeType' => 'audio/mpeg',
         ];
     }
 

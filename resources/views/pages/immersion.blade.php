@@ -63,7 +63,7 @@
                                     <div class="glass"></div>
                                     <div class="content">
                                         <span class="title">{!! $mod['title'] !!}</span>
-                                        <span class="text">Description du module {{ $index + 1 }}.</span>
+                                        <span class="text">Commencez à explorer le modul {{ $index + 1 }}.</span>
                                     </div>
                                     <div class="bottom">
                                         <div class="icon-container">

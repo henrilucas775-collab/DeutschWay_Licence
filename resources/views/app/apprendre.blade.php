@@ -1,6 +1,6 @@
 <x-layouts::app :title="isset($chapitreSlug) ? 'Apprendre - ' . ucfirst($chapitreSlug) : __('Apprendre')">
     @if(isset($chapitreSlug))
-        @livewire('learn-space', ['chapitreSlug' => $chapitreSlug])
+        @livewire('learn-space', ['chapitreSlug' => $chapitreSlug, 'isRevision' => $isRevision ?? false])
     @else
         <div class="lab-section-header">
             <div class="lab-section-eyebrow">Section active</div>

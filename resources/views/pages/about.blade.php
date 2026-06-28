@@ -43,9 +43,9 @@
                                     <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
                                 </svg>
                             </div>
-                            <h3>Interior</h3>
+                            <h3>Apprentissage Interactif</h3>
                         </div>
-                        <p>Transform your living spaces with our expert interior design services. We blend functionality and aesthetics to create spaces that reflect your unique style and personality.</p>
+                        <p>Plongez dans des leçons dynamiques adaptées à votre niveau. Chaque module est conçu pour une immersion totale et un apprentissage fluide de la langue allemande.</p>
                     </div>
 
                     <div class="service-item">
@@ -60,9 +60,9 @@
                                     <polyline points="22 4 12 14.01 9 11.01" />
                                 </svg>
                             </div>
-                            <h3>Exterior</h3>
+                            <h3>Évaluation Vocale</h3>
                         </div>
-                        <p>Make a lasting impression with stunning exterior designs that enhance curb appeal and create harmonious connections between architecture and landscape.</p>
+                        <p>Perfectionnez votre accent grâce à notre outil d'évaluation de la prononciation alimenté par l'IA (Azure Speech), vous offrant un retour précis et instantané.</p>
                     </div>
 
                     <div class="service-item">
@@ -78,9 +78,9 @@
                                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                                 </svg>
                             </div>
-                            <h3>Design</h3>
+                            <h3>Feedback IA Personnalisé</h3>
                         </div>
-                        <p>Our innovative design process combines creativity with practicality, resulting in spaces that are both beautiful and functional for everyday living.</p>
+                        <p>Bénéficiez d'un accompagnement sur mesure avec des conseils pédagogiques générés par l'intelligence artificielle pour cibler vos axes d'amélioration.</p>
                     </div>
 
                 </div>
@@ -89,10 +89,10 @@
                     <div class="img-wrapper">
                         <div class="dot-top" aria-hidden="true"></div>
                         <div class="img-frame">
-                            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&amp;q=80" width="600" height="800" alt="Modern interior design">
+                            <img src="{{ asset('Deuchh.jpeg') }}" width="600" height="400" alt="Étudiants qui révisent ensemble une langue">
                             <div class="img-overlay">
                                 <a href="#" class="portfolio-btn">
-                                    Our Portfolio
+                                    Commencer l'apprentissage
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                         <line x1="5" y1="12" x2="19" y2="12" />
                                         <polyline points="12 5 19 12 12 19" />
@@ -123,9 +123,9 @@
                                     <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
                                 </svg>
                             </div>
-                            <h3>Decoration</h3>
+                            <h3>Le Laboratoire</h3>
                         </div>
-                        <p>Elevate your space with our curated decoration services. From color schemes to textiles and accessories, we perfect every detail to bring your vision to life.</p>
+                        <p>Expérimentez et révisez vos connaissances dans notre espace interactif dédié à la consolidation de vos acquis grâce à des exercices pratiques et ciblés.</p>
                     </div>
 
                     <div class="service-item">
@@ -143,9 +143,9 @@
                                     <polyline points="22 4 12 14.01 9 11.01" />
                                 </svg>
                             </div>
-                            <h3>Planning</h3>
+                            <h3>Maîtrise de la Grammaire</h3>
                         </div>
-                        <p>Our meticulous planning process ensures every project runs smoothly from concept to completion, with careful attention to timelines, budgets, and requirements.</p>
+                        <p>Démystifiez la grammaire allemande avec des tableaux de conjugaison dynamiques et des leçons interactives pour une compréhension intuitive et durable.</p>
                     </div>
 
                     <div class="service-item">
@@ -168,9 +168,9 @@
                                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                                 </svg>
                             </div>
-                            <h3>Execution</h3>
+                            <h3>Pratique Contextuelle</h3>
                         </div>
-                        <p>Watch your dream space come to life through our flawless execution. Our skilled team handles every aspect of implementation with precision and care.</p>
+                        <p>Mettez en pratique vos connaissances à travers des scénarios immersifs, favorisant une transition naturelle vers la maîtrise complète de la langue.</p>
                     </div>
 
                 </div>
