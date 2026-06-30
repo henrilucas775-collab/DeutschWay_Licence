@@ -14,11 +14,11 @@
 
       /* 3D Library Shelf Section */
       .lab-books-section {
-        background: radial-gradient(circle at center, #e6e6e6ff 0%, #e7e7e7ff 100%);
+        background: radial-gradient(circle at center, var(--lab-stone) 0%, var(--lab-paper) 100%);
         border-radius: 24px;
         padding: 5rem 24px;
         box-shadow: inset 0 0 50px var(--lab-accent), 0 10px 30px rgba(0, 0, 0, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--lab-glass-border);
         position: relative;
         overflow: hidden;
         width: 100%;
@@ -28,7 +28,7 @@
         align-items: center;
 
         /* Model parameters */
-        --bg-color: #e7e7e7;
+        --bg-color: var(--lab-paper);
         --book-width: 220px;
         --book-height: 320px;
         --transition-speed: 0.6s;
@@ -95,7 +95,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: #fff;
+        background: var(--lab-surface);
         border-radius: 2px 8px 8px 2px;
         box-shadow: inset 5px 0 15px rgba(0,0,0,0.1);
         z-index: 1;
@@ -106,11 +106,11 @@
         align-items: center;
         padding: 1.5rem 1rem 1.5rem 2.5rem;
         text-align: center;
-        border: 1px solid #e2e8f0;
+        border: 1px solid var(--lab-glass-border);
       }
 
       .book-content {
-        color: #334155;
+        color: var(--lab-charcoal-mid);
         z-index: 2;
         width: 100%;
         height: 100%;
@@ -124,9 +124,9 @@
         font-family: 'Playfair Display', serif;
         font-size: 1.1rem;
         font-weight: 700;
-        color: #1e293b;
+        color: var(--lab-ink);
         margin-bottom: 0.8rem;
-        border-bottom: 1px solid #cbd5e1;
+        border-bottom: 1px solid var(--lab-glass-border);
         padding-bottom: 0.4rem;
       }
 
@@ -151,15 +151,15 @@
         transition: color 0.25s ease, background 0.25s ease;
         cursor: pointer;
         padding: 0.35rem 0.7rem;
-        border-top: 1px solid #e2e8f0;
-        border-left: 1px solid #e2e8f0;
+        border-top: 1px solid var(--lab-glass-border);
+        border-left: 1px solid var(--lab-glass-border);
         border-radius: 6px 0 0 0;
-        background: #f8fafc;
+        background: var(--lab-stone);
       }
 
       .book-link-text:hover {
-        color: #1e293b;
-        background: #e2e8f0;
+        color: var(--lab-ink);
+        background: var(--lab-clay);
       }
 
       /* Couverture */
@@ -279,7 +279,7 @@
             gap: 8px;
             font-family: 'DM Mono', monospace;
             font-size: 12px;
-            color: var(--charcoal-light, #64748b);
+            color: var(--lab-charcoal-light);
             cursor: pointer;
             background: none;
             border: none;
@@ -288,7 +288,7 @@
             transition: color 0.15s;
             text-decoration: none;
         }
-        .back-btn:hover { color: var(--ink, #0f172a); }
+        .back-btn:hover { color: var(--lab-ink); }
     </style>
 
     <div class="parcours-chapitres-container">

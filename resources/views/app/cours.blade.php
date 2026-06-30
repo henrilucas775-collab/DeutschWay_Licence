@@ -8,11 +8,11 @@
       @import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Sevillana&family=Poppins:wght@300;400;600&display=swap');
 
       .lab-parchemins-section {
-        background: radial-gradient(circle at center, #e6e6e6ff 0%, #e7e7e7ff 100%);
+        background: radial-gradient(circle at center, var(--lab-stone) 0%, var(--lab-paper) 100%);
         border-radius: 24px;
         padding: 5rem 24px;
         box-shadow: inset 0 0 50px var(--lab-accent), 0 10px 30px rgba(0, 0, 0, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--lab-glass-border);
         position: relative;
         overflow: hidden;
         margin-top: 1.5rem;
@@ -205,7 +205,7 @@
       .hint {
         margin-top: 3rem;
         font-size: 0.9rem;
-        color: #64748b;
+        color: var(--lab-charcoal-light);
         font-style: italic;
         font-family: 'Poppins', sans-serif;
         z-index: 1;

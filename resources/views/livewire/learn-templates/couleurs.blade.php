@@ -18,7 +18,7 @@
             "
             :class="{ 'is-playing': playing }"
         >
-            <div class="couleur-preview" style="background: {{ $item['hex'] }}; border-bottom: {{ in_array($item['hex'], ['#ECF0F1', '#F5F0E8']) ? '1px solid var(--glass-border, #e2e8f0)' : 'none' }}"></div>
+            <div class="couleur-preview" style="background: {{ $item['hex'] }}; border-bottom: {{ in_array($item['hex'], ['#ECF0F1', '#F5F0E8']) ? '1px solid var(--lab-glass-border)' : 'none' }}"></div>
             <div class="couleur-body">
                 <div class="couleur-de">{{ $item['de'] }}</div>
                 <div class="couleur-fr">{{ $item['fr'] }}</div>

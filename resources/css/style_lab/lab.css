@@ -16,6 +16,78 @@
   --lab-text-primary: #1E2A32;
   --lab-text-secondary: #5B6F7A;
   --lab-sidebar-w: 260px;
+  --lab-surface: #ffffff;
+  --lab-surface-muted: rgba(255, 255, 255, 0.85);
+  --lab-sidebar-bg: rgba(245, 247, 251, 0.88);
+  --lab-main-bg: rgba(245, 247, 251, 0.5);
+  --lab-topbar-bg: rgba(245, 247, 251, 0.85);
+  --lab-ring-border: rgba(106, 110, 121, 0.12);
+  --lab-ring-border-soft: rgba(106, 110, 121, 0.1);
+  --lab-noise-opacity: 0.4;
+  --lab-shadow-color: rgba(0, 0, 0, 0.02);
+  --lab-toggle-track: #d1d5db;
+  --lab-toggle-thumb: #ffffff;
+  --lab-divider: rgba(106, 110, 121, 0.12);
+}
+
+.lab-shell[data-lab-theme="dark"] {
+  --lab-paper: #121820;
+  --lab-stone: #1A2330;
+  --lab-clay: #243044;
+  --lab-mauve: #2F3A4D;
+  --lab-charcoal-light: #94A3B8;
+  --lab-charcoal-mid: #CBD5E1;
+  --lab-charcoal-deep: #E2E8F0;
+  --lab-ink: #E8EDF2;
+  --lab-accent-soft: #9CB09C;
+  --lab-accent-dim: rgba(139, 154, 139, 0.18);
+  --lab-accent-glow: rgba(139, 154, 139, 0.35);
+  --lab-glass: rgba(30, 40, 54, 0.72);
+  --lab-glass-border: rgba(148, 163, 184, 0.16);
+  --lab-text-primary: #E8EDF2;
+  --lab-text-secondary: #94A3B8;
+  --lab-surface: #1E2836;
+  --lab-surface-muted: rgba(30, 40, 54, 0.92);
+  --lab-sidebar-bg: rgba(18, 24, 32, 0.94);
+  --lab-main-bg: rgba(18, 24, 32, 0.72);
+  --lab-topbar-bg: rgba(22, 30, 42, 0.92);
+  --lab-ring-border: rgba(148, 163, 184, 0.14);
+  --lab-ring-border-soft: rgba(148, 163, 184, 0.1);
+  --lab-noise-opacity: 0.12;
+  --lab-shadow-color: rgba(0, 0, 0, 0.28);
+  --lab-toggle-track: #334155;
+  --lab-toggle-thumb: #E2E8F0;
+  --lab-divider: rgba(148, 163, 184, 0.14);
+  --lab-ui-border: rgba(148, 163, 184, 0.18);
+  --lab-ui-border-soft: rgba(148, 163, 184, 0.1);
+  --lab-ui-surface: #1E2836;
+  --lab-ui-muted: #94A3B8;
+  color-scheme: dark;
+}
+
+.lab-shell[data-lab-theme="dark"] .lab-blob-1 {
+  background: radial-gradient(circle, rgba(139, 154, 139, 0.14) 0%, transparent 70%);
+}
+
+.lab-shell[data-lab-theme="dark"] .lab-blob-2 {
+  background: radial-gradient(circle, rgba(91, 127, 255, 0.08) 0%, transparent 70%);
+}
+
+.lab-shell[data-lab-theme="dark"] .lab-blob-3 {
+  background: radial-gradient(circle, rgba(148, 163, 184, 0.08) 0%, transparent 70%);
+}
+
+.lab-shell[data-lab-theme="dark"] .lab-wip-title span {
+  background: linear-gradient(135deg, #CBD5E1, #94A3B8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.lab-shell[data-lab-theme="dark"] .lab-sidebar::after {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
 }
 
 .lab-mobile-root {
@@ -43,7 +115,7 @@
   content: '';
   position: fixed; inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none; z-index: 9999; opacity: 0.4;
+  pointer-events: none; z-index: 9999; opacity: var(--lab-noise-opacity);
 }
 
 /* ── SOFT AMBIENT BLOBS ── */
@@ -80,14 +152,14 @@
 .lab-sidebar {
   width: var(--lab-sidebar-w);
   flex-shrink: 0;
-  background: rgba(245,247,251,0.88);
+  background: var(--lab-sidebar-bg);
   border-right: 1px solid var(--lab-glass-border);
   backdrop-filter: blur(20px);
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  box-shadow: 2px 0 12px rgba(0,0,0,0.02);
+  box-shadow: 2px 0 12px var(--lab-shadow-color);
 }
 
 .lab-sidebar::before {
@@ -207,10 +279,10 @@
 }
 
 .lab-nav-item.active {
-  background: white;
+  background: var(--lab-surface);
   border-color: var(--lab-mauve);
   color: var(--lab-charcoal-deep);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.02), 0 1px 2px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 12px var(--lab-shadow-color), 0 1px 2px var(--lab-shadow-color);
 }
 
 .lab-nav-item.active::before {
@@ -249,7 +321,7 @@
   display: flex; align-items: center; gap: 12px;
   padding: 12px 14px;
   border-radius: 14px;
-  background: white;
+  background: var(--lab-surface);
   border: 1px solid var(--lab-glass-border);
   cursor: pointer;
   transition: all 0.2s;
@@ -291,7 +363,7 @@
   left: var(--lab-sidebar-w);
   overflow-x: hidden;
   overflow-y: auto;
-  background: rgba(245,247,251,0.5);
+  background: var(--lab-main-bg);
 }
 
 /* topbar claire */
@@ -299,7 +371,7 @@
   display: flex; align-items: center; justify-content: space-between;
   padding: 20px 36px;
   border-bottom: 1px solid var(--lab-glass-border);
-  background: rgba(245,247,251,0.85);
+  background: var(--lab-topbar-bg);
   backdrop-filter: blur(12px);
   position: sticky; top: 0; z-index: 10;
   flex-shrink: 0;
@@ -331,7 +403,7 @@
   padding: 8px 16px;
   border: 1px solid var(--lab-glass-border);
   border-radius: 40px;
-  background: white;
+  background: var(--lab-surface);
   color: var(--lab-charcoal-mid);
   font-family: 'Syne', sans-serif;
   font-size: 12px; font-weight: 500;
@@ -503,7 +575,7 @@
   position: absolute;
   width: 520px; height: 520px;
   border-radius: 50%;
-  border: 1px solid rgba(106,110,121,0.12);
+  border: 1px solid var(--lab-ring-border);
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   animation: lab-spin-slow 45s linear infinite;
@@ -514,7 +586,7 @@
   position: absolute;
   width: 380px; height: 380px;
   border-radius: 50%;
-  border: 1px dashed rgba(106,110,121,0.1);
+  border: 1px dashed var(--lab-ring-border-soft);
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
 }
@@ -535,14 +607,14 @@
   position: relative; z-index: 2;
   text-align: center;
   padding: 48px 56px;
-  background: rgba(255,255,255,0.85);
+  background: var(--lab-surface-muted);
   border: 1px solid var(--lab-glass-border);
   border-radius: 36px;
   backdrop-filter: blur(20px);
   max-width: 560px;
   width: 100%;
   animation: lab-fadeUp 0.55s ease both;
-  box-shadow: 0 12px 32px rgba(0,0,0,0.02);
+  box-shadow: 0 12px 32px var(--lab-shadow-color);
 }
 
 @keyframes lab-fadeUp {
@@ -639,17 +711,115 @@
   font-size: 9.5px;
   color: var(--lab-charcoal-mid);
   letter-spacing: 0.05em;
-  background: white;
+  background: var(--lab-surface);
+}
+
+/* ── APParence (Mon compte) ── */
+.lab-appearance-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.lab-appearance-copy-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--lab-text-primary);
+}
+
+.lab-appearance-copy-desc {
+  font-size: 0.78rem;
+  color: var(--lab-text-secondary);
+  margin-top: 2px;
+}
+
+.lab-theme-toggle {
+  position: relative;
+  display: block;
+  width: 40px;
+  height: 22px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.lab-theme-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.lab-theme-toggle-track {
+  position: absolute;
+  inset: 0;
+  background: var(--lab-toggle-track);
+  border-radius: 22px;
+  transition: background 0.3s ease;
+}
+
+.lab-theme-toggle input:checked + .lab-theme-toggle-track {
+  background: var(--lab-accent);
+}
+
+.lab-theme-toggle-thumb {
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 16px;
+  height: 16px;
+  background: var(--lab-toggle-thumb);
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+  pointer-events: none;
+}
+
+.lab-theme-toggle input:checked ~ .lab-theme-toggle-thumb {
+  transform: translateX(18px);
+}
+
+.lab-account-divider {
+  height: 1px;
+  background: var(--lab-divider);
+  margin: 1.5rem 0;
+}
+
+.lab-accent-picker-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--lab-text-primary);
+  margin-bottom: 10px;
+}
+
+.lab-accent-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid var(--lab-surface);
+  box-shadow: 0 0 0 1px var(--lab-glass-border);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.lab-accent-swatch.is-active {
+  box-shadow: 0 0 0 2px var(--lab-accent);
+  transform: scale(1.05);
+}
+
+.lab-accent-picker {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 /* ── MON COMPTE (maquette interface_lab) ── */
 .lab-account-theme {
-  --lab-ui-accent: #5b7fff;
-  --lab-ui-accent-soft: rgba(91, 127, 255, 0.1);
-  --lab-ui-border: #e5e7eb;
-  --lab-ui-border-soft: #f0f1f4;
-  --lab-ui-surface: #ffffff;
-  --lab-ui-muted: #9ca3af;
+  --lab-ui-accent: var(--lab-accent);
+  --lab-ui-accent-soft: var(--lab-accent-dim);
+  --lab-ui-border: var(--lab-glass-border);
+  --lab-ui-border-soft: var(--lab-divider);
+  --lab-ui-surface: var(--lab-surface);
+  --lab-ui-muted: var(--lab-charcoal-light);
 }
 
 .lab-account-page-intro {
@@ -743,7 +913,7 @@
 }
 
 .lab-account-snav-item:hover {
-  background: #f8f9fb;
+  background: var(--lab-stone);
   color: var(--lab-ink);
 }
 
@@ -853,7 +1023,7 @@
   padding: 5px 12px;
   border-radius: 40px;
   border: 1px solid var(--lab-ui-border);
-  background: #f8f9fb;
+  background: var(--lab-stone);
   font-size: 0.75rem;
   font-weight: 500;
   color: var(--lab-charcoal-mid);
@@ -930,6 +1100,79 @@
   padding: 20px 24px;
 }
 
+.lab-account-subcard {
+  padding: 1.5rem 0;
+  border: 1px solid var(--lab-ui-border);
+  border-radius: 12px;
+  background: var(--lab-ui-surface);
+  box-shadow: 0 1px 3px var(--lab-shadow-color);
+}
+
+.lab-account-code-grid {
+  background: var(--lab-stone);
+  color: var(--lab-ink);
+}
+
+.lab-shell[data-lab-theme="dark"] .lab-account-danger-card,
+html[data-lab-theme="dark"] .lab-account-danger-card {
+  border-color: rgba(248, 113, 113, 0.45);
+}
+
+.lab-shell[data-lab-theme="dark"] .lab-account-danger-header,
+html[data-lab-theme="dark"] .lab-account-danger-header {
+  border-bottom-color: rgba(248, 113, 113, 0.18);
+}
+
+.lab-shell[data-lab-theme="dark"] .lab-account-danger-icon,
+html[data-lab-theme="dark"] .lab-account-danger-icon {
+  background: rgba(239, 68, 68, 0.16);
+}
+
+html[data-lab-theme="dark"] [data-flux-modal] > dialog,
+html[data-lab-theme="dark"] ui-modal > dialog {
+  background: var(--lab-surface);
+  color: var(--lab-ink);
+  border-color: var(--lab-glass-border);
+}
+
+html[data-lab-theme="dark"] .lab-account-qr-frame {
+  border-color: var(--lab-glass-border);
+  background: var(--lab-stone);
+}
+
+html[data-lab-theme="dark"] .lab-account-qr-bg {
+  background: var(--lab-surface);
+  filter: invert(1) brightness(1.5);
+}
+
+html[data-lab-theme="dark"] .lab-account-modal-icon-ring {
+  border-color: var(--lab-glass-border);
+  background: var(--lab-surface);
+}
+
+html[data-lab-theme="dark"] .lab-account-modal-icon-inner {
+  border-color: var(--lab-glass-border);
+  background: var(--lab-stone);
+}
+
+html[data-lab-theme="dark"] .lab-account-manual-key {
+  border-color: var(--lab-glass-border);
+  color: var(--lab-ink);
+}
+
+html[data-lab-theme="dark"] .lab-account-manual-key button {
+  border-color: var(--lab-glass-border);
+}
+
+html[data-lab-theme="dark"] .lab-account-or-divider {
+  background: var(--lab-glass-border);
+}
+
+html[data-lab-theme="dark"] .lab-account-or-label {
+  background: var(--lab-surface);
+  color: var(--lab-text-secondary);
+}
+
 /* Override inputs and buttons to match the maquette style exactly */
 .lab-account-panel button[type="submit"],
 .lab-account-panel button[data-test="delete-user-button"],
@@ -968,20 +1211,26 @@
   height: 40px !important;
   font-size: .875rem !important;
   border-radius: 8px !important;
-  color: #000 !important;
+  background: var(--lab-ui-surface) !important;
+  border-color: var(--lab-ui-border) !important;
+  color: var(--lab-ink) !important;
 }
 .lab-account-panel input:focus {
-  border-color: var(--lab-accent, #5b7fff) !important;
-  box-shadow: 0 0 0 3px rgba(91,127,255,.12) !important;
+  border-color: var(--lab-accent) !important;
+  box-shadow: 0 0 0 3px var(--lab-accent-dim) !important;
 }
 
-/* Override text colors (headings, subheadings, labels, texts) in account settings to be black */
 .lab-account-shell [data-flux-heading],
 .lab-account-shell [data-flux-subheading],
 .lab-account-shell [data-flux-label],
 .lab-account-shell [data-flux-text],
 .lab-account-shell label {
-  color: #000000 !important;
+  color: var(--lab-ink) !important;
+}
+
+.lab-account-shell [data-flux-text][data-variant="subtle"],
+.lab-account-shell flux-text[variant="subtle"] {
+  color: var(--lab-text-secondary) !important;
 }
 
 /* Appliquer la couleur d'accentuation à tous les SVGs de la section Mon Compte */

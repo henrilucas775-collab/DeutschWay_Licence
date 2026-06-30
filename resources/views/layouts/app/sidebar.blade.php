@@ -3,6 +3,38 @@
     <head>
         @include('partials.head')
         <script>
+            function getLabThemePreference() {
+                const stored = localStorage.getItem('labTheme');
+                if (stored === 'dark' || stored === 'light') {
+                    return stored;
+                }
+
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+
+            function applyLabTheme(theme) {
+                const shell = document.querySelector('.lab-shell');
+                if (!shell) {
+                    document.documentElement.removeAttribute('data-lab-theme');
+
+                    return;
+                }
+
+                const resolvedTheme = theme === 'dark' || theme === 'light' ? theme : getLabThemePreference();
+                shell.setAttribute('data-lab-theme', resolvedTheme);
+                document.documentElement.setAttribute('data-lab-theme', resolvedTheme);
+                localStorage.setItem('labTheme', resolvedTheme);
+            }
+
+            function setLabTheme(theme) {
+                applyLabTheme(theme);
+            }
+
+            function isLabThemeDark() {
+                const shell = document.querySelector('.lab-shell');
+                return shell?.getAttribute('data-lab-theme') === 'dark';
+            }
+
             function applyAccentColor() {
                 const c = localStorage.getItem('accentColor');
                 if (c) {
@@ -16,7 +48,7 @@
                         document.head.appendChild(styleEl);
                     }
                     styleEl.innerHTML = `
-                        :root, .lab-account-theme, .lab-account-panel, body {
+                        :root, .lab-shell, .lab-account-theme, .lab-account-panel, body {
                             --color-primary: ${c} !important;
                             --color-accent: ${c} !important;
                             --lab-accent: ${c} !important;
@@ -31,8 +63,16 @@
                     `;
                 }
             }
-            applyAccentColor();
-            document.addEventListener('livewire:navigated', applyAccentColor);
+
+            document.addEventListener('livewire:navigated', () => {
+                if (document.querySelector('.lab-shell')) {
+                    applyLabTheme(localStorage.getItem('labTheme'));
+                } else {
+                    document.documentElement.removeAttribute('data-lab-theme');
+                }
+
+                applyAccentColor();
+            });
         </script>
     </head>
     <body class="min-h-screen overflow-x-hidden">
@@ -47,7 +87,19 @@
             @click="mobileNavOpen = false"
             aria-hidden="true"
         ></div>
-        <div class="lab-shell">
+        <div class="lab-shell" data-lab-theme="light">
+            <script>
+                (function () {
+                    var shell = document.currentScript.parentElement;
+                    var stored = localStorage.getItem('labTheme');
+                    var theme = stored === 'dark' || stored === 'light'
+                        ? stored
+                        : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                    shell.setAttribute('data-lab-theme', theme);
+                    document.documentElement.setAttribute('data-lab-theme', theme);
+                })();
+            </script>
+            <script>applyAccentColor();</script>
             <div class="lab-blob lab-blob-1"></div>
             <div class="lab-blob lab-blob-2"></div>
             <div class="lab-blob lab-blob-3"></div>
@@ -196,7 +248,7 @@
                         </div>
                     </div>
                     <div class="lab-topbar-actions" style="display: flex; gap: 12px;">
-                        <a href="{{ route('home') }}" class="btn-ghost lab-topbar-site-link" style="text-decoration: none; display: flex; align-items: center; gap: 8px; padding: 8px 16px; border: 1px solid var(--lab-glass-border); border-radius: 40px; background: white; color: var(--lab-charcoal-mid); font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s;" wire:navigate @click="mobileNavOpen = false">
+                        <a href="{{ route('home') }}" class="lab-btn-ghost lab-topbar-site-link" wire:navigate @click="mobileNavOpen = false">
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
                                 <path d="M10 3L5 8l5 5"/>
                             </svg> 

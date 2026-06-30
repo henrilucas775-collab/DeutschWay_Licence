@@ -126,7 +126,7 @@
         border-radius: 16px;
         padding: 24px;
         text-align: left;
-        background: white;
+        background: var(--lab-surface);
         cursor: pointer;
         transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
@@ -233,7 +233,7 @@
         margin-top: 24px;
         border: 1px solid var(--lab-glass-border, rgba(106, 110, 121, 0.2));
         border-radius: 18px;
-        background: white;
+        background: var(--lab-surface);
         padding: 32px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
     }
@@ -304,7 +304,7 @@
     }
 
     .rev-btn-primary.is-recording {
-        box-shadow: 0 0 0 2px white, 0 0 0 4px #ef4444;
+        box-shadow: 0 0 0 2px var(--lab-surface), 0 0 0 4px #ef4444;
         animation: rev-pulse 1.2s ease-in-out infinite;
     }
 
@@ -396,7 +396,7 @@
         text-align: left;
         font-size: 14px;
         font-weight: 600;
-        background: white;
+        background: var(--lab-surface);
         color: var(--lab-ink, #1E262F);
         cursor: pointer;
         transition: border-color 0.15s, background 0.15s;
@@ -480,7 +480,7 @@
         font-size: 14px;
         font-family: 'Syne', sans-serif;
         color: var(--lab-ink, #1E262F);
-        background: white;
+        background: var(--lab-surface);
         transition: border-color 0.15s, box-shadow 0.15s;
     }
 
@@ -628,7 +628,7 @@
         border: 1px solid var(--lab-glass-border, rgba(106, 110, 121, 0.2));
         border-radius: 14px;
         padding: 16px;
-        background: white;
+        background: var(--lab-surface);
     }
 
     .rev-score-label {
@@ -654,7 +654,7 @@
         border: 1px solid var(--lab-glass-border, rgba(106, 110, 121, 0.2));
         border-radius: 14px;
         padding: 16px;
-        background: white;
+        background: var(--lab-surface);
     }
 
     .rev-recognized-text {
@@ -668,7 +668,7 @@
         border: 1px solid var(--lab-glass-border, rgba(106, 110, 121, 0.2));
         border-radius: 18px;
         padding: 20px;
-        background: white;
+        background: var(--lab-surface);
     }
 
     .rev-coach-head {
